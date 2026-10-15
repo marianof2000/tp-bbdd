@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">{{ resource.title }}</p>
+    <h1>{% if item %}Editar{% else %}Nueva{% endif %} {{ resource.singular }}</h1>
+  </div>
+</div>
+
+<form class="panel form" method="post">
+  {% for name, label, type in resource.fields %}
+  <label>{{ label }}
+    {% if type == "persona" %}
+    <select name="{{ name }}" required {% if item %}disabled{% endif %}>
+      <option value="">Seleccionar…</option>
+      {% for person in choices.personas %}
+      <option value="{{ person.id_persona }}" {% if form and form.get(name)|int == person.id_persona %}selected{% elif not form and item and item.id_persona == person.id_persona %}selected{% endif %}>
+        {{ person.apellido }}, {{ person.nombre }} ({{ person.documento }})
+      </option>
+      {% endfor %}
+    </select>
+    {% if item %}<input type="hidden" name="id_persona" value="{{ item.id_persona }}">{% endif %}
+    {% else %}
+    <input
+      name="{{ name }}"
+      type="{{ type }}"
+      {% if name != "email" %}required{% endif %}
+      value="{{ form.get(name, '') if form else (item|attr(name) if item and item|attr(name) is not none else '') }}"
+    >
+    {% endif %}
+  </label>
+  {% endfor %}
+  <div class="actions">
+    <button class="button" type="submit">Guardar</button>
+    <a class="button secondary" href="/{{ request.path_params.resource_name }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

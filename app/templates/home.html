@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Sistema de gestión</p>
+  <h1>Biblioteca</h1>
+  <p>Administrá el catálogo, las personas asociadas y la circulación de ejemplares desde un solo lugar.</p>
+  <div class="actions"><a class="button" href="/prestamos/nuevo">Registrar préstamo</a><a class="button secondary" href="/libros">Ver catálogo</a></div>
+</section>
+<section class="cards">
+  <a href="/socios"><strong>Socios</strong><span>Datos personales y teléfonos</span></a>
+  <a href="/libros"><strong>Catálogo</strong><span>Libros, autoría y editoriales</span></a>
+  <a href="/ejemplares"><strong>Ejemplares</strong><span>Inventario y disponibilidad</span></a>
+  <a href="/prestamos"><strong>Préstamos</strong><span>Entregas y devoluciones</span></a>
+</section>
+{% endblock %}

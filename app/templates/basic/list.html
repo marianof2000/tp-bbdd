@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ resource.title }} · Biblioteca{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Administración</p><h1>{{ resource.title }}</h1></div>
+  <a class="button" href="/{{ request.path_params.resource_name }}/nuevo">Nuevo</a>
+</div>
+
+{% if items %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>ID</th>{% for name, label, type in resource.fields %}<th>{{ label }}</th>{% endfor %}<th>Acciones</th></tr></thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item|attr(resource.pk) }}</td>
+        {% for name, label, type in resource.fields %}
+        <td>{% if type == "persona" %}{{ item.persona.apellido }}, {{ item.persona.nombre }}{% else %}{{ item|attr(name) or "—" }}{% endif %}</td>
+        {% endfor %}
+        <td class="row-actions">
+          <a href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}">Ver</a>
+          <a href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/editar">Editar</a>
+          <form method="post" action="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/eliminar" onsubmit="return confirm('¿Eliminar este registro?')">
+            <button class="link danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">Todavía no hay registros.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Problema con la base de datos · Biblioteca{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Base de datos</p>
+  <h1>No pudimos completar la operación</h1>
+  <p>{{ error }}</p>
+  <div class="actions">
+    <a class="button" href="javascript:history.back()">Volver</a>
+    <a class="button secondary" href="/">Ir al inicio</a>
+  </div>
+</section>
+{% endblock %}

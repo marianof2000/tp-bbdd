@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">{{ resource.title }}</p>
+    <h1>{{ resource.singular|capitalize }} #{{ item|attr(resource.pk) }}</h1>
+  </div>
+  <a class="button" href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/editar">Editar</a>
+</div>
+
+<dl class="panel details">
+  {% for name, label, type in resource.fields %}
+  <dt>{{ label }}</dt>
+  <dd>
+    {% if type == "persona" %}{{ item.persona.nombre }} {{ item.persona.apellido }}
+    {% else %}{{ item|attr(name) or "—" }}{% endif %}
+  </dd>
+  {% endfor %}
+</dl>
+
+{% if request.path_params.resource_name == "socios" %}
+<section>
+  <h2>Teléfonos</h2>
+  {% if item.telefonos %}
+  <ul class="clean-list">
+    {% for phone in item.telefonos %}
+    <li>
+      <span>{{ phone.numero }}{% if phone.tipo %} · {{ phone.tipo }}{% endif %}</span>
+      <form method="post" action="/socios/{{ item.id_persona }}/telefonos/{{ phone.id_telefono_socio }}/eliminar">
+        <button class="link danger">Eliminar</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <form class="panel inline-form" method="post" action="/socios/{{ item.id_persona }}/telefonos">
+    <label>Número<input name="numero" maxlength="25" required></label>
+    <label>Tipo<input name="tipo" maxlength="20" placeholder="móvil, casa…"></label>
+    <button class="button">Agregar</button>
+  </form>
+</section>
+{% endif %}
+
+<p><a href="/{{ request.path_params.resource_name }}">← Volver</a></p>
+{% endblock %}

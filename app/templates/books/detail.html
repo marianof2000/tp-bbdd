@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Libro #{{ book.id_libro }}</p><h1>{{ book.titulo }}</h1></div>
+  <a class="button" href="/libros/{{ book.id_libro }}/editar">Editar</a>
+</div>
+<dl class="panel details">
+  <dt>ISBN</dt><dd>{{ book.isbn }}</dd>
+  <dt>Año</dt><dd>{{ book.anio_publicacion or "—" }}</dd>
+  <dt>Editorial</dt><dd>{{ book.editorial.nombre }}</dd>
+  <dt>Autores</dt>
+  <dd><ol>{% for link in book.autores %}<li>{{ link.autor.nombre }} {{ link.autor.apellido }}</li>{% endfor %}</ol></dd>
+</dl>
+<p><a href="/libros">← Volver</a></p>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Ejemplar #{{ copy.id_ejemplar }}</p><h1>{{ copy.codigo_inventario }}</h1></div>
+  <a class="button" href="/ejemplares/{{ copy.id_ejemplar }}/editar">Editar</a>
+</div>
+<dl class="panel details">
+  <dt>Libro</dt><dd>{{ copy.libro.titulo }}</dd>
+  <dt>Incorporación</dt><dd>{{ copy.fecha_incorporacion }}</dd>
+  <dt>Estado</dt><dd>{{ copy.estado|replace("_", " ")|capitalize }}</dd>
+</dl>
+<p><a href="/ejemplares">← Volver</a></p>
+{% endblock %}

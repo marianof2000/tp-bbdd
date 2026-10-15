@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Circulación</p><h1>Préstamos</h1></div>
+  <a class="button" href="/prestamos/nuevo">Nuevo préstamo</a>
+</div>
+{% if loans %}
+<div class="table-wrap"><table>
+  <thead><tr><th>ID</th><th>Socio</th><th>Ejemplar</th><th>Préstamo</th><th>Vencimiento</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    {% for loan in loans %}
+    <tr>
+      <td>{{ loan.id_prestamo }}</td>
+      <td>{{ loan.socio.persona.apellido }}, {{ loan.socio.persona.nombre }}</td>
+      <td>{{ loan.ejemplar.codigo_inventario }} · {{ loan.ejemplar.libro.titulo }}</td>
+      <td>{{ loan.fecha_prestamo }}</td><td>{{ loan.fecha_vencimiento_actual }}</td>
+      <td><span class="status">{{ "Devuelto " ~ loan.fecha_devolucion|string if loan.fecha_devolucion else "Activo" }}</span></td>
+      <td><a href="/prestamos/{{ loan.id_prestamo }}">Ver</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table></div>
+{% else %}<div class="empty">Todavía no hay préstamos.</div>{% endif %}
+{% endblock %}

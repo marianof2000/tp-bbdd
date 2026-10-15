@@ -1,0 +1,16 @@
+# Configuración local
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Entornos y editores
+.venv/
+.idea/
+.vscode/

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Inventario</p><h1>Ejemplares</h1></div>
+  <a class="button" href="/ejemplares/nuevo">Nuevo ejemplar</a>
+</div>
+{% if copies %}
+<div class="table-wrap"><table>
+  <thead><tr><th>Código</th><th>Libro</th><th>Incorporación</th><th>Estado</th><th>Acciones</th></tr></thead>
+  <tbody>
+    {% for copy in copies %}
+    <tr>
+      <td>{{ copy.codigo_inventario }}</td><td>{{ copy.libro.titulo }}</td><td>{{ copy.fecha_incorporacion }}</td>
+      <td><span class="status">{{ copy.estado|replace("_", " ")|capitalize }}</span></td>
+      <td class="row-actions">
+        <a href="/ejemplares/{{ copy.id_ejemplar }}">Ver</a>
+        <a href="/ejemplares/{{ copy.id_ejemplar }}/editar">Editar</a>
+        <form method="post" action="/ejemplares/{{ copy.id_ejemplar }}/eliminar"><button class="link danger">Eliminar</button></form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table></div>
+{% else %}<div class="empty">Todavía no hay ejemplares.</div>{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Catálogo</p><h1>{% if book %}Editar libro{% else %}Nuevo libro{% endif %}</h1></div>
+</div>
+<form method="post" class="panel form">
+  <label>Título<input name="titulo" maxlength="200" required value="{{ form.get('titulo', '') if form else (book.titulo if book else '') }}"></label>
+  <label>ISBN<input name="isbn" maxlength="17" required value="{{ form.get('isbn', '') if form else (book.isbn if book else '') }}"></label>
+  <label>Año de publicación<input type="number" min="1000" max="9999" name="anio_publicacion" value="{{ form.get('anio_publicacion', '') if form else (book.anio_publicacion if book and book.anio_publicacion else '') }}"></label>
+  <label>Editorial
+    <select name="id_editorial" required>
+      <option value="">Seleccionar…</option>
+      {% for editorial in editorials %}
+      <option value="{{ editorial.id_editorial }}" {% if form and form.get('id_editorial')|int == editorial.id_editorial %}selected{% elif not form and book and book.id_editorial == editorial.id_editorial %}selected{% endif %}>{{ editorial.nombre }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <fieldset>
+    <legend>Autores y orden de autoría</legend>
+    {% for author in authors %}
+    {% set existing = (book.autores|selectattr("id_autor", "equalto", author.id_autor)|first) if book else none %}
+    <div class="author-row">
+      <label class="check"><input type="checkbox" name="autores" value="{{ author.id_autor }}" {% if author.id_autor in selected %}checked{% endif %}>{{ author.apellido }}, {{ author.nombre }}</label>
+      <label>Orden<input type="number" min="1" name="orden_{{ author.id_autor }}" value="{{ form.get('orden_' ~ author.id_autor, '') if form else (existing.orden_autoria if existing else loop.index) }}"></label>
+    </div>
+    {% else %}
+    <p>Primero cargá al menos un autor.</p>
+    {% endfor %}
+  </fieldset>
+  <div class="actions"><button class="button">Guardar</button><a class="button secondary" href="/libros">Cancelar</a></div>
+</form>
+{% endblock %}

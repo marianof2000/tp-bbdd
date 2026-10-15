@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Préstamo #{{ loan.id_prestamo }}</p><h1>Editar préstamo</h1></div>
+</div>
+<form class="panel form" method="post">
+  <label>Bibliotecario
+    <select name="id_bibliotecario" required>
+      {% for librarian in librarians %}
+      <option value="{{ librarian.id_persona }}" {% if form and form.get('id_bibliotecario')|int == librarian.id_persona %}selected{% elif not form and loan.id_bibliotecario == librarian.id_persona %}selected{% endif %}>
+        {{ librarian.persona.apellido }}, {{ librarian.persona.nombre }} · {{ librarian.legajo }}
+      </option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Fecha de préstamo<input type="date" name="fecha_prestamo" value="{{ form.get('fecha_prestamo') if form else loan.fecha_prestamo }}" required></label>
+  <label>Vencimiento inicial<input type="date" name="fecha_vencimiento_inicial" value="{{ form.get('fecha_vencimiento_inicial') if form else loan.fecha_vencimiento_inicial }}" required></label>
+  <label>Vencimiento actual<input type="date" name="fecha_vencimiento_actual" value="{{ form.get('fecha_vencimiento_actual') if form else loan.fecha_vencimiento_actual }}" required></label>
+  <div class="actions"><button class="button">Guardar</button><a class="button secondary" href="/prestamos/{{ loan.id_prestamo }}">Cancelar</a></div>
+</form>
+{% endblock %}

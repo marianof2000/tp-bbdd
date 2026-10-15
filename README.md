@@ -42,6 +42,13 @@ uv sync
 cp .env.example .env
 ```
 
+`pyproject.toml` es la fuente editable de dependencias y `uv.lock` fija las versiones.
+Si cambia una dependencia, regenerá el archivo para pip con:
+
+```bash
+uv export --format requirements-txt --no-dev --no-hashes --output-file requirements.txt
+```
+
 O con un entorno virtual y pip:
 
 ```bash
@@ -55,16 +62,19 @@ Editá `.env` y completá `DB_PASSWORD` con la contraseña real. `.env` está ig
 por Git. Los valores iniciales son host `172.16.0.105`, puerto `3306`, usuario
 `dbeaver` y base `biblioteca`.
 
-El DER no define los valores admitidos por `ejemplar.estado`. Esta implementación
-considera `disponible` como apto para prestar y cambia el estado a `prestado` al
-registrar un préstamo. Ambos valores están centralizados y pueden configurarse:
+La inspección de la base real confirmó que `ejemplar.estado` es un `ENUM` con los
+valores `operativo` y `en_reparacion`. Un ejemplar está disponible cuando está
+operativo y no tiene un préstamo activo. La aplicación bloquea su fila mientras
+registra el préstamo para evitar dos préstamos simultáneos. Al devolverlo se conserva
+o restaura el estado operativo. Los valores están centralizados:
 
 ```dotenv
-AVAILABLE_COPY_STATE=disponible
-LOANED_COPY_STATE=prestado
+AVAILABLE_COPY_STATE=operativo
+REPAIR_COPY_STATE=en_reparacion
 ```
 
-Verificá que coincidan con los datos reales antes de usar la aplicación.
+Los modelos también reflejan las longitudes, campos opcionales y restricciones únicas
+observadas en la base real. La inspección fue de solo lectura; no se ejecutó DDL.
 
 ## Ejecución
 
@@ -83,11 +93,13 @@ en <http://127.0.0.1:8000/docs>.
 - Catálogo con editorial y uno o más autores, guardando el orden de autoría.
 - Alta, consulta, edición y eliminación protegida de ejemplares.
 - Alta, consulta y edición de préstamos activos con validación de relaciones y disponibilidad.
-- Devolución transaccional: registra la fecha y vuelve a marcar el ejemplar como
-  disponible.
+- Devolución transaccional: registra la fecha y conserva/restaura el estado operativo.
 - Mensajes de validación e integridad sin exponer la cadena de conexión.
 
-La conexión y los flujos contra MySQL no pueden verificarse sin la contraseña y sin
-acceso a la base. Para comprobar el esquema real de forma no destructiva, compará la
-salida de `SHOW CREATE TABLE nombre_tabla` para las diez tablas con los modelos en
-`app/models/entities.py`.
+La conexión de lectura y el esquema de las diez tablas fueron verificados contra
+MySQL. Los flujos de escritura se prueban en una base SQLite aislada para no modificar
+los datos reales:
+
+```bash
+uv run python -m pytest -q
+```

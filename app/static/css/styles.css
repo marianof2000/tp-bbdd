@@ -1,0 +1,63 @@
+:root{--ink:#17211d;--muted:#65716b;--paper:#f7f5ef;--card:#fff;--green:#236447;--green2:#dcebe2;--line:#d7ddd8;--red:#a53434;--shadow:0 10px 30px rgba(28,48,38,.08)}
+.author-row{display:grid;grid-template-columns:1fr 100px;align-items:end;gap:1rem}
+.author-row label:last-child{font-size:.8rem}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,sans-serif}
+a{color:var(--green);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:#153c2c;color:#fff;padding:1rem max(1.25rem,calc((100vw - 1180px)/2));display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.brand{color:#fff;font-family:Georgia,serif;font-size:1.55rem}
+.brand:hover{text-decoration:none}
+nav{display:flex;gap:1rem;flex-wrap:wrap}
+nav a{color:#e5f0ea;font-size:.9rem}
+main{max-width:1180px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+h1,h2{font-family:Georgia,serif;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,3.6rem);margin:.15rem 0}
+h2{margin-top:2rem}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.75rem;font-weight:700;color:var(--green);margin:0}
+.hero{padding:4rem 0 3rem;max-width:750px}
+.hero>p:not(.eyebrow){font-size:1.25rem;color:var(--muted)}
+.actions,.row-actions{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.button{display:inline-block;border:0;border-radius:.35rem;background:var(--green);color:#fff;padding:.7rem 1rem;font:inherit;font-weight:650;cursor:pointer}
+.button:hover{text-decoration:none;filter:brightness(.95)}
+.button.secondary{background:transparent;color:var(--green);border:1px solid var(--green)}
+.danger-button{background:var(--red)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem}
+.cards a{background:var(--card);border:1px solid var(--line);padding:1.4rem;border-radius:.5rem;box-shadow:var(--shadow);display:grid;gap:.4rem}
+.cards strong{font:1.35rem Georgia,serif;color:var(--ink)}
+.cards span{color:var(--muted)}
+.page-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:2rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:.5rem;padding:1.5rem;box-shadow:var(--shadow)}
+.form{max-width:680px;display:grid;gap:1.1rem}
+.form label,.inline-form label{display:grid;gap:.35rem;font-weight:650}
+input,select{width:100%;padding:.7rem;border:1px solid #aeb8b1;border-radius:.3rem;background:#fff;font:inherit}
+input:focus,select:focus{outline:3px solid var(--green2);border-color:var(--green)}
+fieldset{border:1px solid var(--line);display:grid;gap:.45rem}
+.check{display:flex!important;align-items:center;gap:.6rem;font-weight:400!important}
+.check input{width:auto}
+.table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:.5rem}
+table{width:100%;border-collapse:collapse}
+th,td{padding:.85rem 1rem;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;background:#edf2ee}
+.row-actions form,.clean-list form{display:inline}
+.link{border:0;background:transparent;color:var(--green);padding:0;font:inherit;cursor:pointer}
+.danger{color:var(--red)}
+.details{display:grid;grid-template-columns:minmax(130px,1fr) 3fr;max-width:760px;gap:.75rem 1.5rem}
+.details dt{font-weight:700;color:var(--muted)}
+.details dd{margin:0}
+.details ol{margin:0;padding-left:1.3rem}
+.alert{padding:1rem;border-radius:.4rem;margin-bottom:1rem}
+.success{background:#dcefe3;color:#17462f}
+.error{background:#f7dddd;color:#712828}
+.empty{padding:3rem;text-align:center;border:1px dashed #aeb8b1;color:var(--muted)}
+.status{background:var(--green2);padding:.25rem .55rem;border-radius:2rem;font-size:.85rem}
+.clean-list{max-width:680px;list-style:none;padding:0}
+.clean-list li{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:.75rem}
+.inline-form{max-width:680px;display:flex;align-items:end;gap:1rem;flex-wrap:wrap}
+.inline-form label{flex:1;min-width:180px}
+@media(max-width:650px){header{display:block}
+nav{margin-top:1rem}
+.page-head{align-items:start}
+.details{grid-template-columns:1fr}
+.details dd{margin-bottom:.75rem}
+}

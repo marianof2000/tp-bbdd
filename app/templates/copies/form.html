@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">Inventario</p>
+    <h1>{% if copy %}Editar{% else %}Nuevo{% endif %} ejemplar</h1>
+  </div>
+</div>
+<form class="panel form" method="post">
+  <label>Libro
+    <select name="id_libro" required>
+      <option value="">Seleccionar…</option>
+      {% for book in books %}
+      <option value="{{ book.id_libro }}" {% if form and form.get('id_libro')|int == book.id_libro %}selected{% elif not form and copy and copy.id_libro == book.id_libro %}selected{% endif %}>{{ book.titulo }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Código de inventario
+    <input name="codigo_inventario" maxlength="40" required value="{{ form.get('codigo_inventario', '') if form else (copy.codigo_inventario if copy else '') }}">
+  </label>
+  <label>Fecha de incorporación
+    <input name="fecha_incorporacion" type="date" required value="{{ form.get('fecha_incorporacion', '') if form else (copy.fecha_incorporacion if copy else '') }}">
+  </label>
+  <label>Estado
+    <select name="estado" required>
+      {% for state in copy_states %}
+      <option value="{{ state }}" {% if form and form.get('estado') == state %}selected{% elif not form and copy and copy.estado == state %}selected{% elif not form and not copy and loop.first %}selected{% endif %}>{{ state|replace('_', ' ')|capitalize }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <div class="actions">
+    <button class="button">Guardar</button>
+    <a class="button secondary" href="/ejemplares">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

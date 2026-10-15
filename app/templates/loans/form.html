@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Circulación</p><h1>Nuevo préstamo</h1></div></div>
+<form class="panel form" method="post">
+  <label>Socio
+    <select name="id_socio" required><option value="">Seleccionar…</option>
+      {% for member in members %}<option value="{{ member.id_persona }}" {% if form and form.get('id_socio')|int == member.id_persona %}selected{% endif %}>{{ member.persona.apellido }}, {{ member.persona.nombre }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Ejemplar disponible
+    <select name="id_ejemplar" required><option value="">Seleccionar…</option>
+      {% for copy in copies %}<option value="{{ copy.id_ejemplar }}" {% if form and form.get('id_ejemplar')|int == copy.id_ejemplar %}selected{% endif %}>{{ copy.codigo_inventario }} · {{ copy.libro.titulo }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Bibliotecario
+    <select name="id_bibliotecario" required><option value="">Seleccionar…</option>
+      {% for librarian in librarians %}<option value="{{ librarian.id_persona }}" {% if form and form.get('id_bibliotecario')|int == librarian.id_persona %}selected{% endif %}>{{ librarian.persona.apellido }}, {{ librarian.persona.nombre }} · {{ librarian.legajo }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Fecha de préstamo<input type="date" name="fecha_prestamo" value="{{ form.get('fecha_prestamo', '') if form else '' }}" required></label>
+  <label>Vencimiento inicial<input type="date" name="fecha_vencimiento_inicial" value="{{ form.get('fecha_vencimiento_inicial', '') if form else '' }}" required></label>
+  <label>Vencimiento actual<input type="date" name="fecha_vencimiento_actual" value="{{ form.get('fecha_vencimiento_actual', '') if form else '' }}" required></label>
+  <div class="actions"><button class="button">Registrar</button><a class="button secondary" href="/prestamos">Cancelar</a></div>
+</form>
+{% endblock %}

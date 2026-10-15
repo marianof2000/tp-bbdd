@@ -11,10 +11,16 @@ PUBLIC_PATHS = {"/login", "/favicon.ico"}
 
 
 class AuthenticationMiddleware:
-    def __init__(self, app: ASGIApp):
+    def __init__(self, app: ASGIApp) -> None:
+        """Precondiciones: ``app`` implementa el protocolo ASGI.
+        Postcondiciones: conserva la aplicación para procesar peticiones.
+        """
         self.app = app
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        """Precondiciones: recibe una llamada ASGI con alcance bien formado.
+        Postcondiciones: permite la petición o redirige al ingreso y evita caché.
+        """
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
@@ -37,6 +43,9 @@ class AuthenticationMiddleware:
             return
 
         async def send_with_no_store(message: Message) -> None:
+            """Precondiciones: ``message`` es un mensaje ASGI válido.
+            Postcondiciones: envía el mensaje con cabeceras anti-caché al iniciar.
+            """
             if message["type"] == "http.response.start":
                 self._add_no_store_headers(MutableHeaders(scope=message))
             await send(message)
@@ -44,7 +53,10 @@ class AuthenticationMiddleware:
         await self.app(scope, receive, send_with_no_store)
 
     @staticmethod
-    def _add_no_store_headers(headers) -> None:
+    def _add_no_store_headers(headers: MutableHeaders) -> None:
+        """Precondiciones: ``headers`` es una colección mutable de cabeceras.
+        Postcondiciones: incorpora directivas que impiden almacenar la respuesta.
+        """
         headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         headers["Pragma"] = "no-cache"
         headers["Expires"] = "0"

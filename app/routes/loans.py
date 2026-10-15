@@ -1,7 +1,8 @@
 from datetime import date
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
@@ -23,7 +24,10 @@ router = APIRouter()
 
 
 @router.post("/socios/{member_id}/telefonos", dependencies=[Depends(require_admin)])
-async def phone_create(member_id: int, request: Request, db: Session = Depends(get_db)):
+async def phone_create(member_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió un teléfono para un socio existente.
+    Postcondiciones: agrega el teléfono o redirige con un error validado.
+    """
     member = db.get(Socio, member_id)
     if not member: raise HTTPException(404)
     try:
@@ -34,7 +38,10 @@ async def phone_create(member_id: int, request: Request, db: Session = Depends(g
 
 
 @router.post("/socios/{member_id}/telefonos/{phone_id}/eliminar", dependencies=[Depends(require_admin)])
-def phone_delete(member_id: int, phone_id: int, db: Session = Depends(get_db)):
+def phone_delete(member_id: int, phone_id: int, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y ambos IDs son enteros.
+    Postcondiciones: elimina el teléfono del socio o lanza HTTP 404.
+    """
     phone = db.get(TelefonoSocio, phone_id)
     if not phone or phone.id_socio != member_id: raise HTTPException(404)
     crud.delete(db, phone)
@@ -42,7 +49,10 @@ def phone_delete(member_id: int, phone_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/prestamos", response_class=HTMLResponse)
-def loans(request: Request, db: Session = Depends(get_db)):
+def loans(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: la sesión de base de datos está activa.
+    Postcondiciones: devuelve el listado de préstamos sin modificar datos.
+    """
     return request.app.state.templates.TemplateResponse(
         request=request, name="loans/list.html",
         context=context(request, loans=crud.list_all(db, Prestamo)),
@@ -50,14 +60,25 @@ def loans(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/prestamos/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def loan_new(request: Request, db: Session = Depends(get_db)):
+def loan_new(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador.
+    Postcondiciones: devuelve el formulario para registrar un préstamo.
+    """
     return request.app.state.templates.TemplateResponse(
         request=request, name="loans/form.html",
         context=loan_form_context(request, db),
     )
 
 
-def loan_form_context(request, db, form=None, error=None):
+def loan_form_context(
+    request: Request,
+    db: Session,
+    form: dict[str, Any] | None = None,
+    error: str | None = None,
+) -> dict[str, Any]:
+    """Precondiciones: la sesión está activa; formulario y error son opcionales.
+    Postcondiciones: devuelve socios, bibliotecarios y ejemplares disponibles.
+    """
     return context(
         request,
         members=crud.list_all(db, Socio),
@@ -69,7 +90,10 @@ def loan_form_context(request, db, form=None, error=None):
 
 
 @router.post("/prestamos/nuevo", dependencies=[Depends(require_admin)])
-async def loan_create(request: Request, db: Session = Depends(get_db)):
+async def loan_create(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió un formulario de préstamo.
+    Postcondiciones: registra el préstamo o devuelve un error comprensible.
+    """
     values = dict(await request.form())
     try:
         create_loan(db, PrestamoData.model_validate(values))
@@ -89,7 +113,10 @@ async def loan_create(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/prestamos/{loan_id}", response_class=HTMLResponse)
-def loan_detail(loan_id: int, request: Request, db: Session = Depends(get_db)):
+def loan_detail(loan_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: ``loan_id`` es un identificador entero.
+    Postcondiciones: devuelve el detalle del préstamo o lanza HTTP 404.
+    """
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
     return request.app.state.templates.TemplateResponse(
@@ -99,7 +126,10 @@ def loan_detail(loan_id: int, request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/prestamos/{loan_id}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def loan_edit(loan_id: int, request: Request, db: Session = Depends(get_db)):
+def loan_edit(loan_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el ID es entero.
+    Postcondiciones: muestra la edición si el préstamo sigue activo.
+    """
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
     if loan.fecha_devolucion:
@@ -111,7 +141,10 @@ def loan_edit(loan_id: int, request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/prestamos/{loan_id}/editar", dependencies=[Depends(require_admin)])
-async def loan_update(loan_id: int, request: Request, db: Session = Depends(get_db)):
+async def loan_update(loan_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió datos para un préstamo activo.
+    Postcondiciones: actualiza el préstamo o devuelve un error validado.
+    """
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
     if loan.fecha_devolucion:
@@ -134,7 +167,10 @@ async def loan_update(loan_id: int, request: Request, db: Session = Depends(get_
 
 
 @router.post("/prestamos/{loan_id}/devolver", dependencies=[Depends(require_admin)])
-async def loan_return(loan_id: int, request: Request, db: Session = Depends(get_db)):
+async def loan_return(loan_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió una fecha para un préstamo existente.
+    Postcondiciones: registra la devolución o redirige con el error.
+    """
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
     try:
@@ -146,7 +182,10 @@ async def loan_return(loan_id: int, request: Request, db: Session = Depends(get_
 
 
 @router.post("/prestamos/{loan_id}/eliminar", dependencies=[Depends(require_admin)])
-def loan_delete(loan_id: int, db: Session = Depends(get_db)):
+def loan_delete(loan_id: int, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el ID es entero.
+    Postcondiciones: elimina solo un préstamo devuelto o informa el impedimento.
+    """
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
     if not loan.fecha_devolucion:

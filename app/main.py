@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import SQLAlchemyError
@@ -29,7 +29,10 @@ app.add_middleware(
 )
 
 
-def database_error_response(request: Request, status_code: int = 503):
+def database_error_response(request: Request, status_code: int = 503) -> Response:
+    """Precondiciones: ``request`` pertenece a la aplicación y el estado tiene plantillas.
+    Postcondiciones: devuelve una respuesta HTML segura con el estado indicado.
+    """
     return app.state.templates.TemplateResponse(
         request=request,
         name="database_error.html",
@@ -43,7 +46,10 @@ def database_error_response(request: Request, status_code: int = 503):
 
 
 @app.exception_handler(PersistenceError)
-def persistence_error_handler(request: Request, exc: PersistenceError):
+def persistence_error_handler(request: Request, exc: PersistenceError) -> Response:
+    """Precondiciones: se produjo un ``PersistenceError`` durante una petición.
+    Postcondiciones: devuelve una página de error con estado HTTP 409.
+    """
     return app.state.templates.TemplateResponse(
         request=request,
         name="database_error.html",
@@ -53,12 +59,18 @@ def persistence_error_handler(request: Request, exc: PersistenceError):
 
 
 @app.exception_handler(SQLAlchemyError)
-def sqlalchemy_error_handler(request: Request, exc: SQLAlchemyError):
+def sqlalchemy_error_handler(request: Request, exc: SQLAlchemyError) -> Response:
+    """Precondiciones: SQLAlchemy produjo un error durante una petición.
+    Postcondiciones: devuelve una página genérica con estado HTTP 503.
+    """
     return database_error_response(request)
 
 
 @app.exception_handler(PermissionDenied)
-def permission_denied_handler(request: Request, exc: PermissionDenied):
+def permission_denied_handler(request: Request, exc: PermissionDenied) -> Response:
+    """Precondiciones: una operación protegida lanzó ``PermissionDenied``.
+    Postcondiciones: devuelve una página comprensible con estado HTTP 403.
+    """
     return app.state.templates.TemplateResponse(
         request=request,
         name="forbidden.html",
@@ -72,7 +84,10 @@ def permission_denied_handler(request: Request, exc: PermissionDenied):
 
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
+def home(request: Request) -> Response:
+    """Precondiciones: la petición tiene una sesión autenticada.
+    Postcondiciones: devuelve la página principal de la biblioteca.
+    """
     return app.state.templates.TemplateResponse(
         request=request,
         name="home.html",
@@ -81,13 +96,18 @@ def home(request: Request):
 
 
 @app.get("/health", include_in_schema=False)
-def health():
-    """Comprobación de vida; no abre una conexión con MySQL."""
+def health() -> dict[str, str]:
+    """Precondiciones: ninguna.
+    Postcondiciones: informa que la aplicación vive sin abrir MySQL.
+    """
     return {"status": "ok"}
 
 
 @app.get("/favicon.ico", include_in_schema=False)
-def favicon():
+def favicon() -> RedirectResponse:
+    """Precondiciones: el favicon está disponible entre los archivos estáticos.
+    Postcondiciones: redirige temporalmente al recurso SVG.
+    """
     return RedirectResponse(url="/static/favicon.svg", status_code=307)
 
 

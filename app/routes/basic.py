@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from pydantic import BaseModel, ValidationError
 from sqlalchemy.orm import Session
 
@@ -42,19 +42,28 @@ RESOURCES = {
 
 
 def resource_or_404(name: str) -> Resource:
+    """Precondiciones: ``name`` identifica una ruta solicitada.
+    Postcondiciones: devuelve su recurso o lanza HTTP 404.
+    """
     if name not in RESOURCES:
         raise HTTPException(404)
     return RESOURCES[name]
 
 
-def choices(db: Session, resource: Resource):
+def choices(db: Session, resource: Resource) -> dict[str, Any]:
+    """Precondiciones: la sesión está activa y el recurso está configurado.
+    Postcondiciones: devuelve las opciones requeridas por su formulario.
+    """
     if any(field[2] == "persona" for field in resource.fields):
         return {"personas": crud.list_all(db, Persona)}
     return {}
 
 
 @router.get("/{resource_name}", response_class=HTMLResponse)
-def resource_list(resource_name: str, request: Request, db: Session = Depends(get_db)):
+def resource_list(resource_name: str, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el recurso existe y la sesión de base está activa.
+    Postcondiciones: devuelve el listado sin modificar datos.
+    """
     resource = resource_or_404(resource_name)
     return request.app.state.templates.TemplateResponse(
         request=request, name="basic/list.html",
@@ -63,7 +72,10 @@ def resource_list(resource_name: str, request: Request, db: Session = Depends(ge
 
 
 @router.get("/{resource_name}/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def resource_new(resource_name: str, request: Request, db: Session = Depends(get_db)):
+def resource_new(resource_name: str, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el recurso existe y el usuario es administrador.
+    Postcondiciones: devuelve el formulario vacío de alta.
+    """
     resource = resource_or_404(resource_name)
     return request.app.state.templates.TemplateResponse(
         request=request, name="basic/form.html",
@@ -72,7 +84,10 @@ def resource_new(resource_name: str, request: Request, db: Session = Depends(get
 
 
 @router.post("/{resource_name}/nuevo", dependencies=[Depends(require_admin)])
-async def resource_create(resource_name: str, request: Request, db: Session = Depends(get_db)):
+async def resource_create(resource_name: str, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y envió un formulario.
+    Postcondiciones: crea el registro o devuelve un error validado.
+    """
     resource = resource_or_404(resource_name)
     values = dict(await request.form())
     try:
@@ -100,7 +115,10 @@ async def resource_create(resource_name: str, request: Request, db: Session = De
 
 
 @router.get("/{resource_name}/{record_id:int}", response_class=HTMLResponse)
-def resource_detail(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)):
+def resource_detail(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el recurso existe y ``record_id`` es entero.
+    Postcondiciones: devuelve el detalle o lanza HTTP 404.
+    """
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)
     if not item: raise HTTPException(404)
@@ -111,7 +129,10 @@ def resource_detail(resource_name: str, record_id: int, request: Request, db: Se
 
 
 @router.get("/{resource_name}/{record_id:int}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def resource_edit(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)):
+def resource_edit(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el recurso existe.
+    Postcondiciones: devuelve el formulario cargado o lanza HTTP 404.
+    """
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)
     if not item: raise HTTPException(404)
@@ -122,7 +143,10 @@ def resource_edit(resource_name: str, record_id: int, request: Request, db: Sess
 
 
 @router.post("/{resource_name}/{record_id:int}/editar", dependencies=[Depends(require_admin)])
-async def resource_update(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)):
+async def resource_update(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y envió un formulario.
+    Postcondiciones: actualiza el registro o devuelve un error validado.
+    """
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)
     if not item: raise HTTPException(404)
@@ -147,7 +171,10 @@ async def resource_update(resource_name: str, record_id: int, request: Request, 
 
 
 @router.post("/{resource_name}/{record_id:int}/eliminar", dependencies=[Depends(require_admin)])
-def resource_delete(resource_name: str, record_id: int, db: Session = Depends(get_db)):
+def resource_delete(resource_name: str, record_id: int, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el registro existe.
+    Postcondiciones: elimina el registro o informa que está referenciado.
+    """
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)
     if not item: raise HTTPException(404)

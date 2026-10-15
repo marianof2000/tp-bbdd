@@ -3,9 +3,9 @@ import os
 from dataclasses import dataclass
 from http.cookies import SimpleCookie
 from urllib.parse import urlencode, urlsplit
-
 import pytest
 from starlette.requests import Request
+from starlette.types import Message
 
 from app.core.auth import PermissionDenied, require_admin
 from app.main import app
@@ -23,10 +23,18 @@ class Response:
 class ASGITestClient:
     """Cliente mínimo para probar la aplicación sin depender de un cliente HTTP externo."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Precondiciones: ninguna.
+        Postcondiciones: crea un cliente sin cookies de sesión.
+        """
         self.cookies: dict[str, str] = {}
 
-    async def request(self, method: str, url: str, data=None) -> Response:
+    async def request(
+        self, method: str, url: str, data: dict[str, str] | None = None
+    ) -> Response:
+        """Precondiciones: método, URL y datos representan una petición HTTP.
+        Postcondiciones: ejecuta la aplicación ASGI y devuelve su respuesta capturada.
+        """
         parsed = urlsplit(url)
         body = urlencode(data or {}).encode("utf-8")
         headers = [(b"host", b"test")]
@@ -40,16 +48,22 @@ class ASGITestClient:
             headers.append((b"cookie", cookie_value.encode("ascii")))
 
         delivered = False
-        messages = []
+        messages: list[Message] = []
 
-        async def receive():
+        async def receive() -> Message:
+            """Precondiciones: el cuerpo aún puede ser solicitado por ASGI.
+            Postcondiciones: entrega el cuerpo una sola vez y luego queda en espera.
+            """
             nonlocal delivered
             if not delivered:
                 delivered = True
                 return {"type": "http.request", "body": body, "more_body": False}
             await asyncio.sleep(3600)
 
-        async def send(message):
+        async def send(message: Message) -> None:
+            """Precondiciones: ``message`` es un mensaje ASGI válido.
+            Postcondiciones: agrega el mensaje a la respuesta capturada.
+            """
             messages.append(message)
 
         scope = {
@@ -79,14 +93,26 @@ class ASGITestClient:
         return Response(start["status"], response_headers, response_body.decode("utf-8"))
 
     async def get(self, url: str) -> Response:
+        """Precondiciones: ``url`` es una ruta válida.
+        Postcondiciones: devuelve la respuesta a una petición GET.
+        """
         return await self.request("GET", url)
 
-    async def post(self, url: str, data=None) -> Response:
+    async def post(self, url: str, data: dict[str, str] | None = None) -> Response:
+        """Precondiciones: ``url`` y ``data`` representan un formulario válido.
+        Postcondiciones: devuelve la respuesta a una petición POST.
+        """
         return await self.request("POST", url, data=data)
 
 
-def test_authentication_and_role_permissions():
-    async def exercise_flows():
+def test_authentication_and_role_permissions() -> None:
+    """Precondiciones: las credenciales efímeras de prueba están configuradas.
+    Postcondiciones: verifica autenticación, cierre y permisos de ambos roles.
+    """
+    async def exercise_flows() -> None:
+        """Precondiciones: la aplicación ASGI está inicializada.
+        Postcondiciones: comprueba los flujos HTTP de autenticación y sesión.
+        """
         anonymous = ASGITestClient()
         response = await anonymous.get("/")
         assert response.status_code == 303

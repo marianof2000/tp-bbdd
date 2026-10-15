@@ -23,19 +23,28 @@ class Settings(BaseSettings):
     auth_user_password_hash: str = Field(min_length=1, repr=False)
 
     @model_validator(mode="after")
-    def distinct_account_names(self):
+    def distinct_account_names(self) -> "Settings":
+        """Precondiciones: las variables de ambas cuentas fueron cargadas.
+        Postcondiciones: devuelve la configuración si los usuarios son distintos.
+        """
         if self.auth_admin_username == self.auth_user_username:
             raise ValueError("Las cuentas admin y user deben tener nombres diferentes")
         return self
 
     @property
     def copy_states(self) -> tuple[str, str]:
+        """Precondiciones: los estados de ejemplar están configurados.
+        Postcondiciones: devuelve los estados disponible y en reparación.
+        """
         return self.available_copy_state, self.repair_copy_state
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property
     def database_url(self) -> str:
+        """Precondiciones: existen los datos de conexión requeridos.
+        Postcondiciones: devuelve una URL MySQL con credenciales escapadas.
+        """
         user = quote_plus(self.db_user)
         password = quote_plus(self.db_password)
         return f"mysql+pymysql://{user}:{password}@{self.db_host}:{self.db_port}/{self.db_name}?charset=utf8mb4"
@@ -43,4 +52,7 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """Precondiciones: el entorno contiene las variables obligatorias.
+    Postcondiciones: devuelve una instancia validada y almacenada en caché.
+    """
     return Settings()

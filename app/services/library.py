@@ -16,6 +16,9 @@ class BusinessRuleError(Exception):
 
 
 def save_book(db: Session, book: Libro | None, data: LibroData, author_ids: list[int]) -> Libro:
+    """Precondiciones: la sesión está activa y hay al menos un autor existente.
+    Postcondiciones: crea o actualiza el libro y su autoría de forma atómica.
+    """
     if not author_ids:
         raise BusinessRuleError("Seleccioná al menos un autor.")
     authors = list(db.scalars(select(Autor).where(Autor.id_autor.in_(author_ids))))
@@ -44,6 +47,9 @@ def save_book(db: Session, book: Libro | None, data: LibroData, author_ids: list
 
 
 def add_phone(db: Session, member: Socio, data: TelefonoData) -> TelefonoSocio:
+    """Precondiciones: ``member`` existe y los datos del teléfono son válidos.
+    Postcondiciones: confirma y devuelve el teléfono, o revierte ante un error.
+    """
     try:
         phone = TelefonoSocio(id_socio=member.id_persona, **data.model_dump())
         db.add(phone)
@@ -56,6 +62,9 @@ def add_phone(db: Session, member: Socio, data: TelefonoData) -> TelefonoSocio:
 
 
 def create_loan(db: Session, data: PrestamoData) -> Prestamo:
+    """Precondiciones: los identificadores y fechas del préstamo son válidos.
+    Postcondiciones: crea un préstamo activo solo para un ejemplar disponible.
+    """
     settings = get_settings()
     member = db.get(Socio, data.id_socio)
     librarian = db.get(Bibliotecario, data.id_bibliotecario)
@@ -91,6 +100,9 @@ def create_loan(db: Session, data: PrestamoData) -> Prestamo:
 
 
 def return_loan(db: Session, loan: Prestamo, returned_on: date) -> None:
+    """Precondiciones: el préstamo está activo y la fecha no es anterior al alta.
+    Postcondiciones: registra la devolución y deja disponible el ejemplar.
+    """
     if loan.fecha_devolucion:
         raise BusinessRuleError("Este préstamo ya fue devuelto.")
     if returned_on < loan.fecha_prestamo:
@@ -105,6 +117,9 @@ def return_loan(db: Session, loan: Prestamo, returned_on: date) -> None:
 
 
 def list_available_copies(db: Session) -> list[Ejemplar]:
+    """Precondiciones: la sesión está activa.
+    Postcondiciones: devuelve ejemplares disponibles y sin préstamo activo.
+    """
     active_loan_exists = exists().where(
         Prestamo.id_ejemplar == Ejemplar.id_ejemplar,
         Prestamo.fecha_devolucion.is_(None),

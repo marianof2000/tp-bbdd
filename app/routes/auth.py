@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 
 from app.core.auth import authenticate, current_user
 from app.routes.helpers import context, redirect
@@ -8,13 +8,19 @@ router = APIRouter()
 
 
 def safe_next_path(value: str | None) -> str:
+    """Precondiciones: ``value`` es una ruta opcional proporcionada por el cliente.
+    Postcondiciones: devuelve una ruta interna segura o ``/``.
+    """
     if value and value.startswith("/") and not value.startswith("//"):
         return value
     return "/"
 
 
 @router.get("/login", response_class=HTMLResponse)
-def login_form(request: Request):
+def login_form(request: Request) -> Response:
+    """Precondiciones: la petición tiene soporte de sesión.
+    Postcondiciones: muestra el ingreso o redirige si ya existe una sesión.
+    """
     if current_user(request):
         return redirect("/")
     return request.app.state.templates.TemplateResponse(
@@ -25,7 +31,10 @@ def login_form(request: Request):
 
 
 @router.post("/login", response_class=HTMLResponse)
-async def login(request: Request):
+async def login(request: Request) -> Response:
+    """Precondiciones: el cuerpo puede interpretarse como formulario.
+    Postcondiciones: inicia una sesión válida o responde 401 sin revelar detalles.
+    """
     form = await request.form()
     username = str(form.get("username", ""))
     password = str(form.get("password", ""))
@@ -49,6 +58,9 @@ async def login(request: Request):
 
 
 @router.post("/logout")
-async def logout(request: Request):
+async def logout(request: Request) -> Response:
+    """Precondiciones: la petición tiene soporte de sesión.
+    Postcondiciones: vacía la sesión y redirige al ingreso.
+    """
     request.session.clear()
     return redirect("/login", "La sesión se cerró correctamente.")

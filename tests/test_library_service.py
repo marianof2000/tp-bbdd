@@ -1,4 +1,6 @@
 from datetime import date, timedelta
+from collections.abc import Generator
+from typing import Any
 
 import pytest
 from sqlalchemy import create_engine, event
@@ -22,7 +24,10 @@ from app.services.library import BusinessRuleError, create_loan, return_loan
 
 
 @pytest.fixture
-def db():
+def db() -> Generator[Session, None, None]:
+    """Precondiciones: SQLite está disponible en memoria.
+    Postcondiciones: entrega una sesión aislada con el esquema creado.
+    """
     engine = create_engine(
         "sqlite+pysqlite:///:memory:",
         connect_args={"check_same_thread": False},
@@ -30,7 +35,10 @@ def db():
     )
 
     @event.listens_for(engine, "connect")
-    def enable_foreign_keys(connection, _):
+    def enable_foreign_keys(connection: Any, _: Any) -> None:
+        """Precondiciones: SQLite acaba de abrir una conexión DB-API.
+        Postcondiciones: activa la verificación de claves foráneas.
+        """
         connection.execute("PRAGMA foreign_keys=ON")
 
     Base.metadata.create_all(engine)
@@ -38,7 +46,10 @@ def db():
         yield session
 
 
-def seed_library(db: Session):
+def seed_library(db: Session) -> tuple[Socio, Bibliotecario, Ejemplar, Editorial]:
+    """Precondiciones: ``db`` es una sesión vacía con el esquema creado.
+    Postcondiciones: confirma y devuelve datos básicos relacionados.
+    """
     member_person = Persona(nombre="Ana", apellido="Paz", documento="1", email=None)
     librarian_person = Persona(nombre="Luis", apellido="Sol", documento="2", email=None)
     publisher = Editorial(nombre="Editorial de prueba")
@@ -69,6 +80,9 @@ def seed_library(db: Session):
 
 
 def loan_data(member: Socio, librarian: Bibliotecario, copy: Ejemplar) -> PrestamoData:
+    """Precondiciones: las tres entidades tienen identificadores persistidos.
+    Postcondiciones: devuelve datos coherentes para un préstamo de siete días.
+    """
     today = date.today()
     return PrestamoData(
         id_socio=member.id_persona,
@@ -80,7 +94,10 @@ def loan_data(member: Socio, librarian: Bibliotecario, copy: Ejemplar) -> Presta
     )
 
 
-def test_loan_cannot_be_duplicated_and_can_be_returned(db: Session):
+def test_loan_cannot_be_duplicated_and_can_be_returned(db: Session) -> None:
+    """Precondiciones: la prueba recibe una base aislada.
+    Postcondiciones: verifica unicidad del préstamo activo y su devolución.
+    """
     member, librarian, copy, _ = seed_library(db)
     data = loan_data(member, librarian, copy)
 
@@ -96,7 +113,10 @@ def test_loan_cannot_be_duplicated_and_can_be_returned(db: Session):
     assert copy.estado == "operativo"
 
 
-def test_duplicate_document_rolls_back(db: Session):
+def test_duplicate_document_rolls_back(db: Session) -> None:
+    """Precondiciones: la prueba recibe una base aislada.
+    Postcondiciones: verifica el rollback ante un documento duplicado.
+    """
     create(db, Persona, {"nombre": "A", "apellido": "A", "documento": "10", "email": None})
 
     with pytest.raises(PersistenceError):
@@ -105,14 +125,20 @@ def test_duplicate_document_rolls_back(db: Session):
     assert db.query(Persona).count() == 1
 
 
-def test_referenced_record_cannot_be_deleted(db: Session):
+def test_referenced_record_cannot_be_deleted(db: Session) -> None:
+    """Precondiciones: la prueba recibe una base aislada con claves foráneas.
+    Postcondiciones: verifica que no se elimine una editorial referenciada.
+    """
     _, _, _, publisher = seed_library(db)
 
     with pytest.raises(ReferencedRecordError):
         delete(db, publisher)
 
 
-def test_current_due_date_cannot_precede_initial_due_date():
+def test_current_due_date_cannot_precede_initial_due_date() -> None:
+    """Precondiciones: se construyen fechas deterministas relativas a hoy.
+    Postcondiciones: verifica el rechazo de vencimientos incoherentes.
+    """
     today = date.today()
 
     with pytest.raises(ValueError, match="vencimiento actual"):

@@ -1,7 +1,10 @@
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
+from starlette.datastructures import FormData
 
 from app.core.auth import require_admin
 from app.core.config import get_settings
@@ -15,7 +18,10 @@ from app.services.library import BusinessRuleError, save_book
 router = APIRouter()
 
 
-def ordered_author_ids(form) -> list[int]:
+def ordered_author_ids(form: FormData) -> list[int]:
+    """Precondiciones: ``form`` contiene autores seleccionados y sus órdenes.
+    Postcondiciones: devuelve IDs ordenados o lanza ``ValueError`` si son inválidos.
+    """
     selected = [int(value) for value in form.getlist("autores")]
     ordered = []
     for author_id in selected:
@@ -32,14 +38,26 @@ def ordered_author_ids(form) -> list[int]:
 
 
 @router.get("/libros", response_class=HTMLResponse)
-def books(request: Request, db: Session = Depends(get_db)):
+def books(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: la sesión de base de datos está activa.
+    Postcondiciones: devuelve el listado de libros sin modificar datos.
+    """
     return request.app.state.templates.TemplateResponse(
         request=request, name="books/list.html",
         context=context(request, books=crud.list_all(db, Libro)),
     )
 
 
-def book_form_context(request, db, book=None, form=None, error=None):
+def book_form_context(
+    request: Request,
+    db: Session,
+    book: Libro | None = None,
+    form: FormData | None = None,
+    error: str | None = None,
+) -> dict[str, Any]:
+    """Precondiciones: la sesión está activa; libro y formulario son opcionales.
+    Postcondiciones: devuelve el contexto completo del formulario de libro.
+    """
     selected = (
         {int(value) for value in form.getlist("autores")}
         if form is not None
@@ -57,14 +75,20 @@ def book_form_context(request, db, book=None, form=None, error=None):
 
 
 @router.get("/libros/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def book_new(request: Request, db: Session = Depends(get_db)):
+def book_new(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador.
+    Postcondiciones: devuelve el formulario vacío de libro.
+    """
     return request.app.state.templates.TemplateResponse(
         request=request, name="books/form.html", context=book_form_context(request, db)
     )
 
 
 @router.post("/libros/nuevo", dependencies=[Depends(require_admin)])
-async def book_create(request: Request, db: Session = Depends(get_db)):
+async def book_create(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió datos de libro y autoría.
+    Postcondiciones: crea el libro o devuelve el formulario con error.
+    """
     form = await request.form()
     try:
         data = LibroData.model_validate(dict(form))
@@ -87,7 +111,10 @@ async def book_create(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/libros/{book_id}", response_class=HTMLResponse)
-def book_detail(book_id: int, request: Request, db: Session = Depends(get_db)):
+def book_detail(book_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: ``book_id`` es un identificador entero.
+    Postcondiciones: devuelve el detalle del libro o lanza HTTP 404.
+    """
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
     return request.app.state.templates.TemplateResponse(
@@ -96,7 +123,10 @@ def book_detail(book_id: int, request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/libros/{book_id}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def book_edit(book_id: int, request: Request, db: Session = Depends(get_db)):
+def book_edit(book_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el libro existe.
+    Postcondiciones: devuelve el formulario cargado o lanza HTTP 404.
+    """
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
     return request.app.state.templates.TemplateResponse(
@@ -105,7 +135,10 @@ def book_edit(book_id: int, request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/libros/{book_id}/editar", dependencies=[Depends(require_admin)])
-async def book_update(book_id: int, request: Request, db: Session = Depends(get_db)):
+async def book_update(book_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió datos para un libro existente.
+    Postcondiciones: actualiza libro y autoría o devuelve un error.
+    """
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
     form = await request.form()
@@ -122,7 +155,10 @@ async def book_update(book_id: int, request: Request, db: Session = Depends(get_
 
 
 @router.post("/libros/{book_id}/eliminar", dependencies=[Depends(require_admin)])
-def book_delete(book_id: int, db: Session = Depends(get_db)):
+def book_delete(book_id: int, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el ID es entero.
+    Postcondiciones: elimina el libro o informa que está referenciado.
+    """
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
     try:
@@ -133,14 +169,26 @@ def book_delete(book_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/ejemplares", response_class=HTMLResponse)
-def copies(request: Request, db: Session = Depends(get_db)):
+def copies(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: la sesión de base de datos está activa.
+    Postcondiciones: devuelve el listado de ejemplares sin modificar datos.
+    """
     return request.app.state.templates.TemplateResponse(
         request=request, name="copies/list.html",
         context=context(request, copies=crud.list_all(db, Ejemplar)),
     )
 
 
-def copy_form_context(request, db, copy=None, form=None, error=None):
+def copy_form_context(
+    request: Request,
+    db: Session,
+    copy: Ejemplar | None = None,
+    form: dict[str, Any] | None = None,
+    error: str | None = None,
+) -> dict[str, Any]:
+    """Precondiciones: la sesión está activa; ejemplar y formulario son opcionales.
+    Postcondiciones: devuelve el contexto completo del formulario de ejemplar.
+    """
     return context(
         request,
         copy=copy,
@@ -152,7 +200,10 @@ def copy_form_context(request, db, copy=None, form=None, error=None):
 
 
 @router.get("/ejemplares/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def copy_new(request: Request, db: Session = Depends(get_db)):
+def copy_new(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador.
+    Postcondiciones: devuelve el formulario vacío de ejemplar.
+    """
     return request.app.state.templates.TemplateResponse(
         request=request, name="copies/form.html",
         context=copy_form_context(request, db),
@@ -160,7 +211,10 @@ def copy_new(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/ejemplares/nuevo", dependencies=[Depends(require_admin)])
-async def copy_create(request: Request, db: Session = Depends(get_db)):
+async def copy_create(request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió un formulario de ejemplar.
+    Postcondiciones: crea el ejemplar o devuelve un error validado.
+    """
     values = dict(await request.form())
     try:
         crud.create(db, Ejemplar, EjemplarData.model_validate(values).model_dump())
@@ -174,7 +228,10 @@ async def copy_create(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/ejemplares/{copy_id}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
-def copy_edit(copy_id: int, request: Request, db: Session = Depends(get_db)):
+def copy_edit(copy_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el ID es entero.
+    Postcondiciones: devuelve el formulario cargado o lanza HTTP 404.
+    """
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)
     return request.app.state.templates.TemplateResponse(
@@ -184,7 +241,10 @@ def copy_edit(copy_id: int, request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/ejemplares/{copy_id}", response_class=HTMLResponse)
-def copy_detail(copy_id: int, request: Request, db: Session = Depends(get_db)):
+def copy_detail(copy_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: ``copy_id`` es un identificador entero.
+    Postcondiciones: devuelve el detalle del ejemplar o lanza HTTP 404.
+    """
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)
     return request.app.state.templates.TemplateResponse(
@@ -193,7 +253,10 @@ def copy_detail(copy_id: int, request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/ejemplares/{copy_id}/editar", dependencies=[Depends(require_admin)])
-async def copy_update(copy_id: int, request: Request, db: Session = Depends(get_db)):
+async def copy_update(copy_id: int, request: Request, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el administrador envió datos para un ejemplar existente.
+    Postcondiciones: actualiza el ejemplar o devuelve un error validado.
+    """
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)
     values = dict(await request.form())
@@ -211,7 +274,10 @@ async def copy_update(copy_id: int, request: Request, db: Session = Depends(get_
 
 
 @router.post("/ejemplares/{copy_id}/eliminar", dependencies=[Depends(require_admin)])
-def copy_delete(copy_id: int, db: Session = Depends(get_db)):
+def copy_delete(copy_id: int, db: Session = Depends(get_db)) -> Response:
+    """Precondiciones: el usuario es administrador y el ID es entero.
+    Postcondiciones: elimina el ejemplar o informa que está referenciado.
+    """
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)
     try:

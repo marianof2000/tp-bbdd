@@ -10,6 +10,9 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 
 def get_db() -> Generator[Session, None, None]:
+    """Precondiciones: la configuración de la base de datos es válida.
+    Postcondiciones: entrega una sesión y garantiza su cierre al finalizar.
+    """
     db = SessionLocal()
     try:
         yield db

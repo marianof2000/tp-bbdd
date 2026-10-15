@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Annotated
+from typing import Annotated, Any
 
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
@@ -13,7 +13,10 @@ class PersonaData(BaseModel):
 
     @field_validator("email", mode="before")
     @classmethod
-    def email_vacio_es_nulo(cls, value):
+    def email_vacio_es_nulo(cls, value: Any) -> Any:
+        """Precondiciones: recibe el valor crudo del formulario.
+        Postcondiciones: convierte un valor vacío en ``None``.
+        """
         return value or None
 
 
@@ -33,7 +36,10 @@ class TelefonoData(BaseModel):
 
     @field_validator("tipo", mode="before")
     @classmethod
-    def tipo_vacio_es_nulo(cls, value):
+    def tipo_vacio_es_nulo(cls, value: Any) -> Any:
+        """Precondiciones: recibe el tipo crudo del formulario.
+        Postcondiciones: convierte un valor vacío en ``None``.
+        """
         return value or None
 
 
@@ -54,7 +60,10 @@ class LibroData(BaseModel):
 
     @field_validator("anio_publicacion", mode="before")
     @classmethod
-    def anio_vacio_es_nulo(cls, value):
+    def anio_vacio_es_nulo(cls, value: Any) -> Any:
+        """Precondiciones: recibe el año crudo del formulario.
+        Postcondiciones: convierte un valor vacío en ``None``.
+        """
         return value or None
 
 
@@ -66,7 +75,10 @@ class EjemplarData(BaseModel):
 
     @field_validator("estado")
     @classmethod
-    def estado_valido(cls, value):
+    def estado_valido(cls, value: str) -> str:
+        """Precondiciones: ``value`` es un estado no vacío.
+        Postcondiciones: devuelve el estado permitido o lanza ``ValueError``.
+        """
         if value not in get_settings().copy_states:
             raise ValueError("El estado del ejemplar no es válido")
         return value
@@ -81,7 +93,10 @@ class PrestamoData(BaseModel):
     fecha_vencimiento_actual: date
 
     @model_validator(mode="after")
-    def fechas_coherentes(self):
+    def fechas_coherentes(self) -> "PrestamoData":
+        """Precondiciones: Pydantic validó tipos y campos del préstamo.
+        Postcondiciones: devuelve el modelo si sus fechas son cronológicas.
+        """
         if self.fecha_vencimiento_inicial < self.fecha_prestamo:
             raise ValueError("El vencimiento no puede ser anterior al préstamo")
         if self.fecha_vencimiento_actual < self.fecha_prestamo:

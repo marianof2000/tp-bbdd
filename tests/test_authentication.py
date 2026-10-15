@@ -147,7 +147,10 @@ def test_authentication_and_role_permissions():
         name="books/list.html",
         context=context(reader_request, books=[]),
     )
-    assert "Nuevo libro" not in response.body.decode("utf-8")
+    rendered_page = response.body.decode("utf-8")
+    assert os.environ["AUTH_USER_USERNAME"] in rendered_page
+    assert f"{os.environ['AUTH_USER_USERNAME']} · user" not in rendered_page
+    assert "Nuevo libro" not in rendered_page
     with pytest.raises(PermissionDenied):
         require_admin(reader_request)
 

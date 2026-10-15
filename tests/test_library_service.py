@@ -110,3 +110,17 @@ def test_referenced_record_cannot_be_deleted(db: Session):
 
     with pytest.raises(ReferencedRecordError):
         delete(db, publisher)
+
+
+def test_current_due_date_cannot_precede_initial_due_date():
+    today = date.today()
+
+    with pytest.raises(ValueError, match="vencimiento actual"):
+        PrestamoData(
+            id_socio=1,
+            id_bibliotecario=2,
+            id_ejemplar=3,
+            fecha_prestamo=today,
+            fecha_vencimiento_inicial=today + timedelta(days=14),
+            fecha_vencimiento_actual=today + timedelta(days=7),
+        )

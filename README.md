@@ -18,17 +18,24 @@ Pydantic y plantillas Jinja2.
 │   ├── templates/     # Vistas HTML Jinja2
 │   ├── static/css/    # Estilos propios
 │   └── main.py        # Creación y configuración de FastAPI
+├── sql/
+│   ├── Biblioteca_2026-10-12T20_27_58.966Z.sql  # Creación del esquema
+│   ├── 01_carga_personas_biblioteca.sql
+│   ├── 02_carga_110_autores.sql
+│   ├── 03_carga_30_editoriales.sql
+│   ├── 04_carga_50_libros_revisado.sql
+│   ├── 05_carga_telefonos_socios.sql
+│   ├── 06_carga_ejemplares.sql
+│   └── 07_consultas_20_preguntas_biblioteca.sql
 ├── .env.example
 ├── requirements.txt
 ├── pyproject.toml
 └── main.py            # Punto de entrada breve
 ```
 
-No había un script SQL ni modelos previos en este proyecto para comparar con el DER.
-Los modelos respetan los nombres de tablas, campos, claves primarias y claves foráneas
-mostrados en la imagen. Las longitudes de los campos de texto no aparecen en el DER:
-las longitudes usadas por los modelos son límites razonables, pero deben compararse
-con `SHOW CREATE TABLE ...` antes de operar contra la base real.
+Al comenzar no había un script SQL ni modelos previos en el proyecto. Los modelos y
+el esquema agregado respetan el DER y fueron comparados con las diez tablas reales,
+incluyendo longitudes, nulabilidad, claves y restricciones únicas.
 
 La aplicación **no crea, altera ni elimina tablas al arrancar**. Tampoco incluye
 migraciones automáticas.
@@ -43,19 +50,10 @@ cp .env.example .env
 ```
 
 `pyproject.toml` es la fuente editable de dependencias y `uv.lock` fija las versiones.
-Si cambia una dependencia, regenerá el archivo para pip con:
+Si cambia una dependencia, regenerá `requirements.txt` con:
 
 ```bash
 uv export --format requirements-txt --no-dev --no-hashes --output-file requirements.txt
-```
-
-O con un entorno virtual y pip:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
 ```
 
 Editá `.env` y completá `DB_PASSWORD` con la contraseña real. `.env` está ignorado
@@ -75,6 +73,33 @@ REPAIR_COPY_STATE=en_reparacion
 
 Los modelos también reflejan las longitudes, campos opcionales y restricciones únicas
 observadas en la base real. La inspección fue de solo lectura; no se ejecutó DDL.
+
+## Archivos SQL
+
+El directorio `sql/` contiene el esquema completo de la base, seis cargas ordenadas
+de datos de prueba y veinte consultas de lectura. Los scripts no se ejecutan al
+iniciar la aplicación.
+
+Orden sugerido para una base vacía:
+
+1. `Biblioteca_2026-10-12T20_27_58.966Z.sql`: crea la base y las diez tablas.
+2. `01_carga_personas_biblioteca.sql`: personas, socios y bibliotecarios.
+3. `02_carga_110_autores.sql`: autores.
+4. `03_carga_30_editoriales.sql`: editoriales.
+5. `04_carga_50_libros_revisado.sql`: libros y sus autores.
+6. `05_carga_telefonos_socios.sql`: teléfonos.
+7. `06_carga_ejemplares.sql`: ejemplares.
+8. `07_consultas_20_preguntas_biblioteca.sql`: consultas de comprobación.
+
+Para crear el esquema en una base vacía, seleccioná primero la base de destino y
+ejecutá:
+
+```bash
+mysql -u USUARIO -p < sql/Biblioteca_2026-10-12T20_27_58.966Z.sql
+```
+
+Los scripts de carga insertan datos. No los ejecutes sobre la base existente sin
+revisar primero su contenido y confirmar que corresponde cargar esos registros.
 
 ## Ejecución
 

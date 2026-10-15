@@ -86,4 +86,6 @@ class PrestamoData(BaseModel):
             raise ValueError("El vencimiento no puede ser anterior al préstamo")
         if self.fecha_vencimiento_actual < self.fecha_prestamo:
             raise ValueError("El vencimiento actual no puede ser anterior al préstamo")
+        if self.fecha_vencimiento_actual < self.fecha_vencimiento_inicial:
+            raise ValueError("El vencimiento actual no puede ser anterior al vencimiento inicial")
         return self

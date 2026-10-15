@@ -24,6 +24,8 @@ idna==3.20
     # via
     #   anyio
     #   email-validator
+itsdangerous==2.2.0
+    # via tpi-python
 jinja2==3.1.6
     # via tpi-python
 markupsafe==3.0.4

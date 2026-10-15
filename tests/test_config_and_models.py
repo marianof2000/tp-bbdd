@@ -1,3 +1,5 @@
+import os
+
 from app.core.config import Settings
 from app.models import (Autor, Bibliotecario, Editorial, Ejemplar, Libro, LibroAutor,
                         Persona, Prestamo, Socio, TelefonoSocio)
@@ -33,6 +35,7 @@ def test_home_renders_with_current_starlette_signature():
         "query_string": b"", "headers": [], "scheme": "http",
         "server": ("test", 80), "client": ("test", 1), "root_path": "",
         "app": app, "router": app.router,
+        "session": {"user": {"username": os.environ["AUTH_ADMIN_USERNAME"], "role": "admin"}},
     })
     response = home(request)
     assert response.status_code == 200

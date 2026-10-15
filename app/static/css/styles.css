@@ -10,6 +10,10 @@ header{background:#153c2c;color:#fff;padding:1rem max(1.25rem,calc((100vw - 1180
 .brand:hover{text-decoration:none}
 nav{display:flex;gap:1rem;flex-wrap:wrap}
 nav a{color:#e5f0ea;font-size:.9rem}
+.session-info{display:flex;align-items:center;gap:.75rem;margin-left:auto;font-size:.85rem;color:#dcebe2}
+.session-info form{margin:0}
+.logout-button{border:1px solid #9db9aa;border-radius:.3rem;background:transparent;color:#fff;padding:.4rem .65rem;cursor:pointer}
+.logout-button:hover{background:rgba(255,255,255,.1)}
 main{max-width:1180px;margin:0 auto;padding:2.5rem 1.25rem 5rem}
 h1,h2{font-family:Georgia,serif;line-height:1.15}
 h1{font-size:clamp(2rem,5vw,3.6rem);margin:.15rem 0}
@@ -17,6 +21,9 @@ h2{margin-top:2rem}
 .eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.75rem;font-weight:700;color:var(--green);margin:0}
 .hero{padding:4rem 0 3rem;max-width:750px}
 .hero>p:not(.eyebrow){font-size:1.25rem;color:var(--muted)}
+.muted{color:var(--muted)}
+.login-shell{min-height:65vh;display:grid;place-items:center}
+.login-form{width:min(100%,420px)}
 .actions,.row-actions{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
 .button{display:inline-block;border:0;border-radius:.35rem;background:var(--green);color:#fff;padding:.7rem 1rem;font:inherit;font-weight:650;cursor:pointer}
 .button:hover{text-decoration:none;filter:brightness(.95)}

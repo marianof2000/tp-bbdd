@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Circulación</p><h1>Préstamos</h1></div>
-  <a class="button" href="/prestamos/nuevo">Nuevo préstamo</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/prestamos/nuevo">Nuevo préstamo</a>{% endif %}
 </div>
 {% if loans %}
 <div class="table-wrap"><table>

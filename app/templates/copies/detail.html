@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Ejemplar #{{ copy.id_ejemplar }}</p><h1>{{ copy.codigo_inventario }}</h1></div>
-  <a class="button" href="/ejemplares/{{ copy.id_ejemplar }}/editar">Editar</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/ejemplares/{{ copy.id_ejemplar }}/editar">Editar</a>{% endif %}
 </div>
 <dl class="panel details">
   <dt>Libro</dt><dd>{{ copy.libro.titulo }}</dd>

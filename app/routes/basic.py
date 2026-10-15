@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, ValidationError
 from sqlalchemy.orm import Session
 
+from app.core.auth import require_admin
 from app.db.session import get_db
 from app.models import Autor, Bibliotecario, Editorial, Persona, Socio
 from app.schemas.entities import AutorData, BibliotecarioData, EditorialData, PersonaData, SocioData
@@ -61,7 +62,7 @@ def resource_list(resource_name: str, request: Request, db: Session = Depends(ge
     )
 
 
-@router.get("/{resource_name}/nuevo", response_class=HTMLResponse)
+@router.get("/{resource_name}/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def resource_new(resource_name: str, request: Request, db: Session = Depends(get_db)):
     resource = resource_or_404(resource_name)
     return request.app.state.templates.TemplateResponse(
@@ -70,7 +71,7 @@ def resource_new(resource_name: str, request: Request, db: Session = Depends(get
     )
 
 
-@router.post("/{resource_name}/nuevo")
+@router.post("/{resource_name}/nuevo", dependencies=[Depends(require_admin)])
 async def resource_create(resource_name: str, request: Request, db: Session = Depends(get_db)):
     resource = resource_or_404(resource_name)
     values = dict(await request.form())
@@ -109,7 +110,7 @@ def resource_detail(resource_name: str, record_id: int, request: Request, db: Se
     )
 
 
-@router.get("/{resource_name}/{record_id:int}/editar", response_class=HTMLResponse)
+@router.get("/{resource_name}/{record_id:int}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def resource_edit(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)):
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)
@@ -120,7 +121,7 @@ def resource_edit(resource_name: str, record_id: int, request: Request, db: Sess
     )
 
 
-@router.post("/{resource_name}/{record_id:int}/editar")
+@router.post("/{resource_name}/{record_id:int}/editar", dependencies=[Depends(require_admin)])
 async def resource_update(resource_name: str, record_id: int, request: Request, db: Session = Depends(get_db)):
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)
@@ -145,7 +146,7 @@ async def resource_update(resource_name: str, record_id: int, request: Request, 
         )
 
 
-@router.post("/{resource_name}/{record_id:int}/eliminar")
+@router.post("/{resource_name}/{record_id:int}/eliminar", dependencies=[Depends(require_admin)])
 def resource_delete(resource_name: str, record_id: int, db: Session = Depends(get_db)):
     resource = resource_or_404(resource_name)
     item = crud.get_or_none(db, resource.model, record_id)

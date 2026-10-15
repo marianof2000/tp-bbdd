@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Libro #{{ book.id_libro }}</p><h1>{{ book.titulo }}</h1></div>
-  <a class="button" href="/libros/{{ book.id_libro }}/editar">Editar</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/libros/{{ book.id_libro }}/editar">Editar</a>{% endif %}
 </div>
 <dl class="panel details">
   <dt>ISBN</dt><dd>{{ book.isbn }}</dd>

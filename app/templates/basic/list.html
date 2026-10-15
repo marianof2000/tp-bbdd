@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Administración</p><h1>{{ resource.title }}</h1></div>
-  <a class="button" href="/{{ request.path_params.resource_name }}/nuevo">Nuevo</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/{{ request.path_params.resource_name }}/nuevo">Nuevo</a>{% endif %}
 </div>
 
 {% if items %}
@@ -19,10 +19,12 @@
         {% endfor %}
         <td class="row-actions">
           <a href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}">Ver</a>
-          <a href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/editar">Editar</a>
-          <form method="post" action="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/eliminar" onsubmit="return confirm('¿Eliminar este registro?')">
-            <button class="link danger">Eliminar</button>
-          </form>
+          {% if current_user.role == "admin" %}
+            <a href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/editar">Editar</a>
+            <form method="post" action="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/eliminar" onsubmit="return confirm('¿Eliminar este registro?')">
+              <button class="link danger">Eliminar</button>
+            </form>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}

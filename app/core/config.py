@@ -1,7 +1,7 @@
 from functools import lru_cache
 from urllib.parse import quote_plus
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,6 +14,19 @@ class Settings(BaseSettings):
     db_password: str = Field(default="", repr=False)
     available_copy_state: str = "operativo"
     repair_copy_state: str = "en_reparacion"
+    session_secret: str = Field(min_length=32, repr=False)
+    session_https_only: bool = False
+    session_max_age_seconds: int = Field(default=28800, gt=0)
+    auth_admin_username: str = Field(min_length=1)
+    auth_admin_password_hash: str = Field(min_length=1, repr=False)
+    auth_user_username: str = Field(min_length=1)
+    auth_user_password_hash: str = Field(min_length=1, repr=False)
+
+    @model_validator(mode="after")
+    def distinct_account_names(self):
+        if self.auth_admin_username == self.auth_user_username:
+            raise ValueError("Las cuentas admin y user deben tener nombres diferentes")
+        return self
 
     @property
     def copy_states(self) -> tuple[str, str]:

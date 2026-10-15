@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
+from app.core.auth import require_admin
 from app.core.config import get_settings
 from app.db.session import get_db
 from app.models import Autor, Editorial, Ejemplar, Libro
@@ -55,14 +56,14 @@ def book_form_context(request, db, book=None, form=None, error=None):
     )
 
 
-@router.get("/libros/nuevo", response_class=HTMLResponse)
+@router.get("/libros/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def book_new(request: Request, db: Session = Depends(get_db)):
     return request.app.state.templates.TemplateResponse(
         request=request, name="books/form.html", context=book_form_context(request, db)
     )
 
 
-@router.post("/libros/nuevo")
+@router.post("/libros/nuevo", dependencies=[Depends(require_admin)])
 async def book_create(request: Request, db: Session = Depends(get_db)):
     form = await request.form()
     try:
@@ -94,7 +95,7 @@ def book_detail(book_id: int, request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/libros/{book_id}/editar", response_class=HTMLResponse)
+@router.get("/libros/{book_id}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def book_edit(book_id: int, request: Request, db: Session = Depends(get_db)):
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
@@ -103,7 +104,7 @@ def book_edit(book_id: int, request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.post("/libros/{book_id}/editar")
+@router.post("/libros/{book_id}/editar", dependencies=[Depends(require_admin)])
 async def book_update(book_id: int, request: Request, db: Session = Depends(get_db)):
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
@@ -120,7 +121,7 @@ async def book_update(book_id: int, request: Request, db: Session = Depends(get_
         )
 
 
-@router.post("/libros/{book_id}/eliminar")
+@router.post("/libros/{book_id}/eliminar", dependencies=[Depends(require_admin)])
 def book_delete(book_id: int, db: Session = Depends(get_db)):
     book = db.get(Libro, book_id)
     if not book: raise HTTPException(404)
@@ -150,7 +151,7 @@ def copy_form_context(request, db, copy=None, form=None, error=None):
     )
 
 
-@router.get("/ejemplares/nuevo", response_class=HTMLResponse)
+@router.get("/ejemplares/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def copy_new(request: Request, db: Session = Depends(get_db)):
     return request.app.state.templates.TemplateResponse(
         request=request, name="copies/form.html",
@@ -158,7 +159,7 @@ def copy_new(request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.post("/ejemplares/nuevo")
+@router.post("/ejemplares/nuevo", dependencies=[Depends(require_admin)])
 async def copy_create(request: Request, db: Session = Depends(get_db)):
     values = dict(await request.form())
     try:
@@ -172,7 +173,7 @@ async def copy_create(request: Request, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/ejemplares/{copy_id}/editar", response_class=HTMLResponse)
+@router.get("/ejemplares/{copy_id}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def copy_edit(copy_id: int, request: Request, db: Session = Depends(get_db)):
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)
@@ -191,7 +192,7 @@ def copy_detail(copy_id: int, request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.post("/ejemplares/{copy_id}/editar")
+@router.post("/ejemplares/{copy_id}/editar", dependencies=[Depends(require_admin)])
 async def copy_update(copy_id: int, request: Request, db: Session = Depends(get_db)):
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)
@@ -209,7 +210,7 @@ async def copy_update(copy_id: int, request: Request, db: Session = Depends(get_
         )
 
 
-@router.post("/ejemplares/{copy_id}/eliminar")
+@router.post("/ejemplares/{copy_id}/eliminar", dependencies=[Depends(require_admin)])
 def copy_delete(copy_id: int, db: Session = Depends(get_db)):
     copy = db.get(Ejemplar, copy_id)
     if not copy: raise HTTPException(404)

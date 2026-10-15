@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Catálogo</p><h1>Libros</h1></div>
-  <a class="button" href="/libros/nuevo">Nuevo libro</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/libros/nuevo">Nuevo libro</a>{% endif %}
 </div>
 {% if books %}
 <div class="table-wrap"><table>
@@ -14,10 +14,10 @@
       <td>{{ book.isbn }}</td><td>{{ book.editorial.nombre }}</td>
       <td>{% for link in book.autores %}{{ link.autor.apellido }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
       <td>{{ book.anio_publicacion or "—" }}</td>
-      <td class="row-actions">
+      <td class="row-actions">{% if current_user.role == "admin" %}
         <a href="/libros/{{ book.id_libro }}/editar">Editar</a>
         <form method="post" action="/libros/{{ book.id_libro }}/eliminar"><button class="link danger">Eliminar</button></form>
-      </td>
+      {% else %}<a href="/libros/{{ book.id_libro }}">Ver</a>{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Ingresar · Biblioteca{% endblock %}
+{% block content %}
+<section class="login-shell">
+  <form class="panel form login-form" method="post" action="/login">
+    <div>
+      <p class="eyebrow">Acceso</p>
+      <h1>Ingresar</h1>
+      <p class="muted">Usá tu cuenta de la aplicación para continuar.</p>
+    </div>
+    <input type="hidden" name="next" value="{{ next_path }}">
+    <label>Usuario
+      <input name="username" autocomplete="username" maxlength="100" required autofocus value="{{ username or '' }}">
+    </label>
+    <label>Contraseña
+      <input name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <button class="button" type="submit">Ingresar</button>
+  </form>
+</section>
+{% endblock %}

@@ -5,7 +5,7 @@
     <p class="eyebrow">{{ resource.title }}</p>
     <h1>{{ resource.singular|capitalize }} #{{ item|attr(resource.pk) }}</h1>
   </div>
-  <a class="button" href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/editar">Editar</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/{{ request.path_params.resource_name }}/{{ item|attr(resource.pk) }}/editar">Editar</a>{% endif %}
 </div>
 
 <dl class="panel details">
@@ -26,18 +26,18 @@
     {% for phone in item.telefonos %}
     <li>
       <span>{{ phone.numero }}{% if phone.tipo %} · {{ phone.tipo }}{% endif %}</span>
-      <form method="post" action="/socios/{{ item.id_persona }}/telefonos/{{ phone.id_telefono_socio }}/eliminar">
+      {% if current_user.role == "admin" %}<form method="post" action="/socios/{{ item.id_persona }}/telefonos/{{ phone.id_telefono_socio }}/eliminar">
         <button class="link danger">Eliminar</button>
-      </form>
+      </form>{% endif %}
     </li>
     {% endfor %}
   </ul>
   {% endif %}
-  <form class="panel inline-form" method="post" action="/socios/{{ item.id_persona }}/telefonos">
+  {% if current_user.role == "admin" %}<form class="panel inline-form" method="post" action="/socios/{{ item.id_persona }}/telefonos">
     <label>Número<input name="numero" maxlength="25" required></label>
     <label>Tipo<input name="tipo" maxlength="20" placeholder="móvil, casa…"></label>
     <button class="button">Agregar</button>
-  </form>
+  </form>{% endif %}
 </section>
 {% endif %}
 

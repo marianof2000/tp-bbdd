@@ -4,6 +4,8 @@ from fastapi import Request
 from fastapi.responses import RedirectResponse
 from pydantic import ValidationError
 
+from app.core.auth import current_user
+
 
 def redirect(url: str, message: str = "", error: str = "") -> RedirectResponse:
     parts = []
@@ -20,4 +22,4 @@ def validation_message(exc: ValidationError) -> str:
 
 def context(request: Request, **values):
     return {"request": request, "mensaje": request.query_params.get("mensaje"),
-            "error": request.query_params.get("error"), **values}
+            "error": request.query_params.get("error"), "current_user": current_user(request), **values}

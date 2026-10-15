@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Acceso denegado · Biblioteca{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Permisos</p>
+  <h1>Operación no permitida</h1>
+  <p>{{ error }}</p>
+  <a class="button secondary" href="javascript:history.back()">Volver</a>
+</section>
+{% endblock %}

@@ -4,7 +4,10 @@
   <p class="eyebrow">Sistema de gestión</p>
   <h1>Biblioteca</h1>
   <p>Administrá el catálogo, las personas asociadas y la circulación de ejemplares desde un solo lugar.</p>
-  <div class="actions"><a class="button" href="/prestamos/nuevo">Registrar préstamo</a><a class="button secondary" href="/libros">Ver catálogo</a></div>
+  <div class="actions">
+    {% if current_user.role == "admin" %}<a class="button" href="/prestamos/nuevo">Registrar préstamo</a>{% endif %}
+    <a class="button secondary" href="/libros">Ver catálogo</a>
+  </div>
 </section>
 <section class="cards">
   <a href="/socios"><strong>Socios</strong><span>Datos personales y teléfonos</span></a>

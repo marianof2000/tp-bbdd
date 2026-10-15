@@ -74,6 +74,39 @@ REPAIR_COPY_STATE=en_reparacion
 Los modelos también reflejan las longitudes, campos opcionales y restricciones únicas
 observadas en la base real. La inspección fue de solo lectura; no se ejecutó DDL.
 
+## Acceso y roles
+
+Las cuentas iniciales de desarrollo son:
+
+| Usuario | Clave inicial | Rol | Permisos |
+|---|---|---|---|
+| `admin` | `admin` | Administrador | Consulta, alta, edición y eliminación |
+| `user` | `user` | Consulta | Listados y detalles únicamente |
+
+Los nombres y hashes se leen desde `.env`; no hay usuarios en el código ni una tabla
+adicional en MySQL. Las claves se verifican con `scrypt` y nunca se guardan en texto
+plano. Para cambiar una contraseña, generá un hash nuevo:
+
+```bash
+uv run python -m app.core.auth
+```
+
+Copiá el resultado en `AUTH_ADMIN_PASSWORD_HASH` o `AUTH_USER_PASSWORD_HASH`. Los
+nombres se cambian con `AUTH_ADMIN_USERNAME` y `AUTH_USER_USERNAME`.
+
+Antes de usar la aplicación fuera del entorno de demostración:
+
+1. Cambiá ambas contraseñas iniciales.
+2. Generá una clave de sesión nueva con
+   `uv run python -c "import secrets; print(secrets.token_urlsafe(48))"` y guardala
+   en `SESSION_SECRET`.
+3. Configurá `SESSION_HTTPS_ONLY=true` cuando el sitio funcione mediante HTTPS.
+4. Reiniciá la aplicación para invalidar las sesiones anteriores.
+
+La cookie de sesión es `HttpOnly`, usa `SameSite=Lax`, tiene una duración configurable
+y puede limitarse a HTTPS. Las respuestas protegidas usan `Cache-Control: no-store`:
+después de cerrar sesión, volver con el botón “Atrás” no rehabilita el acceso.
+
 ## Archivos SQL
 
 El directorio `sql/` contiene el esquema completo de la base, seis cargas ordenadas
@@ -120,6 +153,22 @@ en <http://127.0.0.1:8000/docs>.
 - Alta, consulta y edición de préstamos activos con validación de relaciones y disponibilidad.
 - Devolución transaccional: registra la fecha y conserva/restaura el estado operativo.
 - Mensajes de validación e integridad sin exponer la cadena de conexión.
+- Inicio y cierre de sesión con roles `admin` y `user`.
+- Autorización aplicada tanto a los controles HTML como a las rutas de escritura.
+
+## Verificación de autenticación
+
+Las pruebas automatizadas comprueban que:
+
+1. `admin` puede consultar y crear registros.
+2. `user` puede abrir listados y detalles sin ver controles de escritura.
+3. Una petición directa de `user` a una ruta de escritura responde `403` y no
+   modifica la base.
+4. Una petición sin sesión es redirigida a `/login`.
+5. Credenciales incorrectas responden con un mensaje genérico y no abren sesión.
+6. El cierre de sesión elimina la sesión y vuelve a bloquear las páginas protegidas.
+
+Resultado actual: **12 pruebas aprobadas**.
 
 La conexión de lectura y el esquema de las diez tablas fueron verificados contra
 MySQL. Los flujos de escritura se prueban en una base SQLite aislada para no modificar

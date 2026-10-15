@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Inventario</p><h1>Ejemplares</h1></div>
-  <a class="button" href="/ejemplares/nuevo">Nuevo ejemplar</a>
+  {% if current_user.role == "admin" %}<a class="button" href="/ejemplares/nuevo">Nuevo ejemplar</a>{% endif %}
 </div>
 {% if copies %}
 <div class="table-wrap"><table>
@@ -14,8 +14,10 @@
       <td><span class="status">{{ copy.estado|replace("_", " ")|capitalize }}</span></td>
       <td class="row-actions">
         <a href="/ejemplares/{{ copy.id_ejemplar }}">Ver</a>
-        <a href="/ejemplares/{{ copy.id_ejemplar }}/editar">Editar</a>
-        <form method="post" action="/ejemplares/{{ copy.id_ejemplar }}/eliminar"><button class="link danger">Eliminar</button></form>
+        {% if current_user.role == "admin" %}
+          <a href="/ejemplares/{{ copy.id_ejemplar }}/editar">Editar</a>
+          <form method="post" action="/ejemplares/{{ copy.id_ejemplar }}/eliminar"><button class="link danger">Eliminar</button></form>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}

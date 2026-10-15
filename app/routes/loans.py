@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
+from app.core.auth import require_admin
 from app.db.session import get_db
 from app.models import Bibliotecario, Prestamo, Socio, TelefonoSocio
 from app.routes.helpers import context, redirect, validation_message
@@ -21,7 +22,7 @@ from app.services.library import (
 router = APIRouter()
 
 
-@router.post("/socios/{member_id}/telefonos")
+@router.post("/socios/{member_id}/telefonos", dependencies=[Depends(require_admin)])
 async def phone_create(member_id: int, request: Request, db: Session = Depends(get_db)):
     member = db.get(Socio, member_id)
     if not member: raise HTTPException(404)
@@ -32,7 +33,7 @@ async def phone_create(member_id: int, request: Request, db: Session = Depends(g
         return redirect(f"/socios/{member_id}", error=validation_message(exc))
 
 
-@router.post("/socios/{member_id}/telefonos/{phone_id}/eliminar")
+@router.post("/socios/{member_id}/telefonos/{phone_id}/eliminar", dependencies=[Depends(require_admin)])
 def phone_delete(member_id: int, phone_id: int, db: Session = Depends(get_db)):
     phone = db.get(TelefonoSocio, phone_id)
     if not phone or phone.id_socio != member_id: raise HTTPException(404)
@@ -48,7 +49,7 @@ def loans(request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/prestamos/nuevo", response_class=HTMLResponse)
+@router.get("/prestamos/nuevo", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def loan_new(request: Request, db: Session = Depends(get_db)):
     return request.app.state.templates.TemplateResponse(
         request=request, name="loans/form.html",
@@ -67,7 +68,7 @@ def loan_form_context(request, db, form=None, error=None):
     )
 
 
-@router.post("/prestamos/nuevo")
+@router.post("/prestamos/nuevo", dependencies=[Depends(require_admin)])
 async def loan_create(request: Request, db: Session = Depends(get_db)):
     values = dict(await request.form())
     try:
@@ -97,7 +98,7 @@ def loan_detail(loan_id: int, request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/prestamos/{loan_id}/editar", response_class=HTMLResponse)
+@router.get("/prestamos/{loan_id}/editar", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def loan_edit(loan_id: int, request: Request, db: Session = Depends(get_db)):
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
@@ -109,7 +110,7 @@ def loan_edit(loan_id: int, request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.post("/prestamos/{loan_id}/editar")
+@router.post("/prestamos/{loan_id}/editar", dependencies=[Depends(require_admin)])
 async def loan_update(loan_id: int, request: Request, db: Session = Depends(get_db)):
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
@@ -132,7 +133,7 @@ async def loan_update(loan_id: int, request: Request, db: Session = Depends(get_
         )
 
 
-@router.post("/prestamos/{loan_id}/devolver")
+@router.post("/prestamos/{loan_id}/devolver", dependencies=[Depends(require_admin)])
 async def loan_return(loan_id: int, request: Request, db: Session = Depends(get_db)):
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)
@@ -144,7 +145,7 @@ async def loan_return(loan_id: int, request: Request, db: Session = Depends(get_
         return redirect(f"/prestamos/{loan_id}", error=str(exc))
 
 
-@router.post("/prestamos/{loan_id}/eliminar")
+@router.post("/prestamos/{loan_id}/eliminar", dependencies=[Depends(require_admin)])
 def loan_delete(loan_id: int, db: Session = Depends(get_db)):
     loan = db.get(Prestamo, loan_id)
     if not loan: raise HTTPException(404)

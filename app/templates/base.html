@@ -10,11 +10,17 @@
 <body>
   <header>
     <a class="brand" href="/">Biblioteca</a>
+    {% if current_user %}
     <nav>
       <a href="/personas">Personas</a><a href="/socios">Socios</a><a href="/bibliotecarios">Bibliotecarios</a>
       <a href="/libros">Libros</a><a href="/autores">Autores</a><a href="/editoriales">Editoriales</a>
       <a href="/ejemplares">Ejemplares</a><a href="/prestamos">Préstamos</a>
     </nav>
+    <div class="session-info">
+      <span>{{ current_user.username }} · {{ current_user.role }}</span>
+      <form method="post" action="/logout"><button class="logout-button">Cerrar sesión</button></form>
+    </div>
+    {% endif %}
   </header>
   <main>
     {% if mensaje %}<div class="alert success">{{ mensaje }}</div>{% endif %}

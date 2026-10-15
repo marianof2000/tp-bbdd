@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-head">
   <div><p class="eyebrow">Préstamo</p><h1>#{{ loan.id_prestamo }}</h1></div>
-  {% if not loan.fecha_devolucion %}<a class="button" href="/prestamos/{{ loan.id_prestamo }}/editar">Editar</a>{% endif %}
+  {% if current_user.role == "admin" and not loan.fecha_devolucion %}<a class="button" href="/prestamos/{{ loan.id_prestamo }}/editar">Editar</a>{% endif %}
 </div>
 <dl class="panel details">
   <dt>Socio</dt><dd>{{ loan.socio.persona.nombre }} {{ loan.socio.persona.apellido }}</dd>
@@ -13,12 +13,12 @@
   <dt>Vencimiento actual</dt><dd>{{ loan.fecha_vencimiento_actual }}</dd>
   <dt>Devolución</dt><dd>{{ loan.fecha_devolucion or 'Pendiente' }}</dd>
 </dl>
-{% if not loan.fecha_devolucion %}
+{% if current_user.role == "admin" and not loan.fecha_devolucion %}
 <form class="panel inline-form" method="post" action="/prestamos/{{ loan.id_prestamo }}/devolver">
   <label>Fecha de devolución<input type="date" name="fecha_devolucion" value="{{ today }}" required></label>
   <button class="button">Registrar devolución</button>
 </form>
-{% else %}
+{% elif current_user.role == "admin" %}
 <form method="post" action="/prestamos/{{ loan.id_prestamo }}/eliminar" onsubmit="return confirm('¿Eliminar este préstamo histórico?')"><button class="button danger-button">Eliminar</button></form>
 {% endif %}
 <p><a href="/prestamos">← Volver</a></p>

@@ -16,11 +16,18 @@ from app.models import (
     Libro,
     LibroAutor,
     Persona,
+    Prestamo,
     Socio,
 )
 from app.schemas.entities import PrestamoData
 from app.services.crud import PersistenceError, ReferencedRecordError, create, delete
 from app.services.library import BusinessRuleError, create_loan, return_loan
+from app.services.library_queries import (
+    get_book_availability,
+    get_library_statistics,
+    list_overdue_loans,
+    search_books,
+)
 
 
 @pytest.fixture
@@ -150,3 +157,108 @@ def test_current_due_date_cannot_precede_initial_due_date() -> None:
             fecha_vencimiento_inicial=today + timedelta(days=14),
             fecha_vencimiento_actual=today + timedelta(days=7),
         )
+
+
+def test_search_books_returns_catalog_details(db: Session) -> None:
+    """Precondiciones: existe un libro con autor y editorial.
+    Postcondiciones: la búsqueda parcial ignora mayúsculas y devuelve sus relaciones.
+    """
+    seed_library(db)
+
+    results = search_books(db, "LIBRO DE")
+
+    assert results == [
+        {
+            "id_libro": 1,
+            "titulo": "Libro de prueba",
+            "isbn": "978-0-00-000000-1",
+            "editorial": "Editorial de prueba",
+            "autores": ["Ada Lovelace"],
+            "anio_publicacion": 2020,
+        }
+    ]
+
+
+def test_read_only_library_queries(db: Session) -> None:
+    """Precondiciones: hay ejemplares en distintos estados e historiales de préstamo.
+    Postcondiciones: disponibilidad, vencimientos y estadísticas respetan préstamos activos.
+    """
+    member, librarian, available_copy, _ = seed_library(db)
+    book_id = available_copy.id_libro
+    reference_date = date(2026, 1, 20)
+    repair_copy = Ejemplar(
+        id_libro=book_id,
+        codigo_inventario="E-2",
+        fecha_incorporacion=reference_date,
+        estado="en_reparacion",
+    )
+    overdue_copy = Ejemplar(
+        id_libro=book_id,
+        codigo_inventario="E-3",
+        fecha_incorporacion=reference_date,
+        estado="operativo",
+    )
+    current_copy = Ejemplar(
+        id_libro=book_id,
+        codigo_inventario="E-4",
+        fecha_incorporacion=reference_date,
+        estado="operativo",
+    )
+    db.add_all([repair_copy, overdue_copy, current_copy])
+    db.flush()
+    db.add_all(
+        [
+            Prestamo(
+                id_socio=member.id_persona,
+                id_bibliotecario=librarian.id_persona,
+                id_ejemplar=overdue_copy.id_ejemplar,
+                fecha_prestamo=date(2026, 1, 1),
+                fecha_vencimiento_inicial=date(2026, 1, 10),
+                fecha_vencimiento_actual=date(2026, 1, 10),
+                fecha_devolucion=None,
+            ),
+            Prestamo(
+                id_socio=member.id_persona,
+                id_bibliotecario=librarian.id_persona,
+                id_ejemplar=current_copy.id_ejemplar,
+                fecha_prestamo=date(2026, 1, 15),
+                fecha_vencimiento_inicial=date(2026, 1, 25),
+                fecha_vencimiento_actual=date(2026, 1, 25),
+                fecha_devolucion=None,
+            ),
+            Prestamo(
+                id_socio=member.id_persona,
+                id_bibliotecario=librarian.id_persona,
+                id_ejemplar=repair_copy.id_ejemplar,
+                fecha_prestamo=date(2025, 12, 20),
+                fecha_vencimiento_inicial=date(2026, 1, 5),
+                fecha_vencimiento_actual=date(2026, 1, 5),
+                fecha_devolucion=date(2026, 1, 6),
+            ),
+        ]
+    )
+    db.commit()
+
+    assert get_book_availability(db, book_id) == {
+        "id_libro": book_id,
+        "titulo": "Libro de prueba",
+        "total": 4,
+        "disponibles": 1,
+        "prestados": 2,
+        "en_reparacion": 1,
+    }
+
+    overdue = list_overdue_loans(db, as_of=reference_date)
+    assert len(overdue) == 1
+    assert overdue[0]["socio"]["nombre"] == "Ana Paz"
+    assert overdue[0]["libro"]["titulo"] == "Libro de prueba"
+    assert overdue[0]["ejemplar"]["codigo_inventario"] == "E-3"
+    assert overdue[0]["dias_vencido"] == 10
+
+    assert get_library_statistics(db, as_of=reference_date) == {
+        "libros": 1,
+        "ejemplares": 4,
+        "socios": 1,
+        "prestamos_activos": 2,
+        "prestamos_vencidos": 1,
+    }

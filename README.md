@@ -17,6 +17,7 @@ Pydantic y plantillas Jinja2.
 │   ├── routes/        # Rutas web separadas por dominio
 │   ├── templates/     # Vistas HTML Jinja2
 │   ├── static/css/    # Estilos propios
+│   ├── mcp_server.py  # Servidor MCP de consultas de solo lectura
 │   └── main.py        # Creación y configuración de FastAPI
 ├── sql/
 │   ├── Biblioteca_2026-10-12T20_27_58.966Z.sql  # Creación del esquema
@@ -142,6 +143,61 @@ uv run uvicorn app.main:app --reload
 
 Abrí <http://127.0.0.1:8000>. La documentación técnica de FastAPI queda disponible
 en <http://127.0.0.1:8000/docs>.
+
+## Integración MCP de solo lectura
+
+El servidor MCP (Model Context Protocol) permite que un asistente de IA consulte el
+catálogo y los préstamos mediante herramientas con parámetros definidos. Reutiliza
+las sesiones SQLAlchemy y la capa de servicios de la aplicación: no recibe SQL, no
+expone la configuración de MySQL y no ofrece herramientas de alta, modificación o
+eliminación.
+
+Herramientas disponibles:
+
+- `buscar_libros(titulo: str)`: busca una coincidencia parcial o total en el título
+  e incluye autores, editorial, ISBN y año.
+- `consultar_disponibilidad(id_libro: int)`: informa ejemplares totales,
+  disponibles, prestados y en reparación.
+- `listar_prestamos_vencidos()`: lista préstamos activos ya vencidos con socio,
+  libro, ejemplar y fechas relevantes.
+- `obtener_estadisticas_biblioteca()`: resume libros, ejemplares, socios, préstamos
+  activos y préstamos vencidos.
+
+Con el mismo `.env` de la aplicación, iniciá el servidor local mediante `stdio`:
+
+```bash
+uv run python -m app.mcp_server
+```
+
+Normalmente el cliente MCP inicia ese proceso por sí mismo. Una configuración stdio
+genérica (reemplazando `/ruta/al/proyecto` por la ruta absoluta del repositorio) es:
+
+```json
+{
+  "mcpServers": {
+    "biblioteca": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ruta/al/proyecto",
+        "run",
+        "python",
+        "-m",
+        "app.mcp_server"
+      ]
+    }
+  }
+}
+```
+
+Después de habilitar el servidor en un cliente compatible, una consulta posible es:
+“Buscá los libros disponibles de Borges”. El cliente puede combinar la búsqueda por
+título con una consulta de disponibilidad para cada resultado.
+
+Un ejemplar se cuenta como disponible si está `operativo` y no tiene un préstamo
+activo. Se cuenta como prestado si tiene un préstamo sin fecha de devolución, y como
+vencido sólo si ese préstamo sigue activo y `fecha_vencimiento_actual` es anterior a
+la fecha de la consulta.
 
 ## Funcionalidad
 

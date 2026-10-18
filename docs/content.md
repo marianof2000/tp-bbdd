@@ -1,52 +1,63 @@
 ## TFI Fundamentos de Bases de Datos
 
 TFI Fundamentos de Bases de Datos.   
-Parte 1 · Selección del proyecto e identificación del problema. 2   
-1.1. Caso de negocio. 2   
-1.2. Entidades, propiedades y tipos de datos. 2   
-1.3. Justificación de los tipos de datos. .3   
-1.4. Relaciones identificadas. .4   
-1.5. Reglas del negocio para dejar asentadas. . 4   
-1.6 Preguntas de negocio. . 5   
-Parte 2 · Modelado en DrawDB con asistencia de IA. . 6   
-2.1. Objetivo. . 6   
-2.2. Entidades del modelo. .6   
-2.3. Relaciones, cardinalidad y participación. . 7   
-2.4. Prompts utilizados para el modelado. . 8   
-Prompt 1 · Crear las entidades y sus atributos. . 8   
-Prompt 2 · Incorporar las relaciones. . 8   
-Prompt 3 · Revisar críticamente el diagrama. . 9   
-2.5. Revisión humana y decisiones. .10   
-2.6. Diagrama del modelo inicial. 10   
-Parte 3 - Refactorización del modelo. . 11   
-3.1. Revisión de claves primarias, candidatas y alternativas. 11   
-3.2. Revisión y resolución de la jerarquía. 13   
-3.2.1 Estructura propuesta. . 13   
-3.2.2 Restricciones de la jerarquía. .14   
-3.2.3 Relaciones con el resto del modelo. 14   
-3.2.4 Representación en DrawDB. ..14   
-3.3. Normalización del modelo hasta tercera forma normal. ..14   
-3.3.1. Primera forma normal. ..15   
-3.3.2. Segunda forma normal. ..15   
-3.3.3. Tercera forma normal. 15   
-3.3.4. Conservación de información histórica.. 16   
-3.4. Reglas de integridad y borrado. . 17   
-3.4.1. Reglas de borrado.. ..17   
-3.4.2. Otras reglas de integridad. . 18   
-3.5. Auditoría del modelo con IA y decisiones adoptadas. ..18   
-3.5.1. Prompt de auditoría. .18   
-3.5.2. Hallazgos y revisión humana. 19   
-3.6. Diagrama definitivo y síntesis de las decisiones de diseño. 20   
-3.6.1. Esquema de referencia para el diagrama. 20   
-3.6.2. Síntesis de las decisiones. . 22   
-Parte 4 · Creación de la base en DBeaver. 23   
-4.1. Objetivo. . 23   
-4.2. Preparación del script.. .23   
-4.3. Restricciones e integridad.. .23   
-4.4. Orden y ejecución en DBeaver. 24   
-4.5. Verificación de la estructura.. . 24   
-4.6. Uso de IA y correcciones.. 25   
-4.7. Resultado y controles pendientes. 26
+Parte 1 · Selección del proyecto e identificación del problema. .3   
+1.1. Caso de negocio. 3   
+1.2. Entidades, propiedades y tipos de datos. 3   
+1.3. Justificación de los tipos de datos. .4   
+1.4. Relaciones identificadas. ..5   
+1.5. Reglas del negocio para dejar asentadas. . 5   
+1.6 Preguntas de negocio. . 6   
+Parte 2 · Modelado en DrawDB con asistencia de IA. . 7   
+2.1. Objetivo. . 7   
+2.2. Entidades del modelo. .. 7   
+2.3. Relaciones, cardinalidad y participación. . 8   
+2.4. Prompts utilizados para el modelado. . 9   
+Prompt 1 · Crear las entidades y sus atributos. . 9   
+Prompt 2 · Incorporar las relaciones. . 9   
+Prompt 3 · Revisar críticamente el diagrama. 10   
+2.5. Revisión humana y decisiones. 11   
+2.6. Diagrama del modelo inicial. 11   
+Parte 3 - Refactorización del modelo. . 12   
+3.1. Revisión de claves primarias, candidatas y alternativas. 12   
+3.2. Revisión y resolución de la jerarquía. . 14   
+3.2.1 Estructura propuesta. . 14   
+3.2.2 Restricciones de la jerarquía. .15   
+3.2.3 Relaciones con el resto del modelo. 15   
+3.2.4 Representación en DrawDB. ..15   
+3.3. Normalización del modelo hasta tercera forma normal. ..15   
+3.3.1. Primera forma normal. ..16   
+3.3.2. Segunda forma normal. ..16   
+3.3.3. Tercera forma normal. 16   
+3.3.4. Conservación de información histórica.. . 17   
+3.4. Reglas de integridad y borrado. 18   
+3.4.1. Reglas de borrado... ..18   
+3.4.2. Otras reglas de integridad. . 19   
+3.5. Auditoría del modelo con IA y decisiones adoptadas.. ..19   
+3.5.1. Prompt de auditoría. ..19   
+3.5.2. Hallazgos y revisión humana. 20   
+3.6. Diagrama definitivo y síntesis de las decisiones de diseño.. 21   
+3.6.1. Esquema de referencia para el diagrama. . 21   
+3.6.2. Síntesis de las decisiones. 23   
+Parte 4 · Creación de la base en DBeaver. 24   
+4.1. Objetivo. . 24   
+4.2. Preparación del script.. .24   
+4.3. Restricciones e integridad. .24   
+4.4. Orden y ejecución en DBeaver. 25   
+4.5. Verificación de la estructura. 25   
+4.6. Uso de IA y correcciones. 26   
+4.7. Resultado y controles pendientes. . 27   
+Parte 5 · Carga de datos de prueba y consultas de negocio.. . 30   
+5.1 Observación de verificación. . 31   
+5.2 Consultas a la base de datos. .31   
+Parte 6 · Consultas de negocio y análisis de resultados.. . 34   
+Parte 7 · Integración de la base de datos con Python e inteligencia artificial.. . 35   
+7.1. Integración mediante MCP .35   
+7.2. Conexión de Python con MySQL . 35   
+7.3. Consultas parametrizadas e inyección SQL 35   
+7.4. Interfaz gráfica de gestión. .35   
+7.5. Usuarios, roles y permisos.. .36   
+7.6. Resultado de la integración. .36
 
 ## Parte 1 · Selección del proyecto e identificación del problema
 
@@ -58,12 +69,12 @@ También registra a sus socios y administra los préstamos. Un bibliotecario reg
 
 El problema que se busca resolver es la dispersión de la información sobre el catálogo, los ejemplares y la circulación de libros. La base de datos deberá permitir identificar qué ejemplar se prestó, a quién, cuándo debe devolverse y si ya fue devuelto, además de consultar autores y editoriales.
 
-Cuando un libro ingresa a la biblioteca, se registra su información bibliográfica, editorial y autores. Cada copia física se registra como un ejemplar con un código de inventario único. Los socios pueden solicitar ejemplares disponibles; un bibliotecario registra cada préstamo, su fecha y su vencimiento. Al devolver el ejemplar, se registra la fecha de devolución. Si se renueva el plazo, se actualiza el vencimiento actual y se conserva el vencimiento inicial. Un ejemplar no puede estar prestado simultáneamente a dos socios.
+Cuando un libro ingresa a la biblioteca, se registra su información bibliográfica, editorial y autores. Cada copia física se registra como un ejemplar con un código de inventario único. Los socios pueden solicitar ejemplares disponibles; un bibliotecario registra cada préstamo, su fecha y su vencimiento. Al devolver el ejemplar, se registra la fecha de devolución. Si se renueva el plazo, se actualiza el vencimiento actual y se conserva el vencimiento inicial. Un ejemplar no puede ser prestado simultáneamente a dos socios.
 
 Alcance: cada préstamo corresponde a un ejemplar. Si un socio retira tres ejemplares al mismo tiempo, se registran tres préstamos. Esta regla mantiene sencillo el modelo inicial.
 
 1.2. Entidades, propiedades y tipos de datos
-<table><tr><td colspan="1" rowspan="1">Entidad</td><td colspan="1" rowspan="1">Propiedades propuestas</td><td colspan="1" rowspan="1">Clave primaria (PK) y motivo</td></tr><tr><td colspan="1" rowspan="1">Socio</td><td colspan="1" rowspan="1">id_socio     BIGINT     UNSIGNED,    nombreVARCHAR(80),     apellido      VARCHAR(80),documento          VARCHAR(20),         emailVARCHAR(254),fecha_alta DATEIME</td><td colspan="1" rowspan="1">id_socio: identifica de formaestable al socio aunque cambiesu correo o se corrija sudocumento.</td></tr><tr><td colspan="1" rowspan="1">Bibliotecario</td><td colspan="1" rowspan="1">id_bibliotecario BIGINT UNSIGNED, nombreVARCHAR(80), apellido VARCHAR(80), legajoVARCHAR(30)</td><td colspan="1" rowspan="1">id_bibliotecario: mantienela identidad del empleadoaunque cambie su legajo.</td></tr><tr><td colspan="1" rowspan="1">Editorial</td><td colspan="1" rowspan="1">id_editorial   BIGINT   UNSIGNED,nombreVARCHAR(120)</td><td colspan="1" rowspan="1">id_editorial:      distingueeditorialesaunque  existannombres similares o cambiende denominación.</td></tr><tr><td colspan="1" rowspan="1">Autor</td><td colspan="1" rowspan="1">id_autor     BIGINT     UNSIGNED,    nombreVARCHAR(80), apellido VARCHAR(80)</td><td colspan="1" rowspan="1">id_autor: distingue personasque pueden compartir nombre yapellido.</td></tr><tr><td colspan="1" rowspan="1">Libro</td><td colspan="1" rowspan="1">id_libro     BIGINT     UNSIGNED,    tituloVARCHAR(200),       isbn        VARCHAR(17),anio_publicacion SMALLBIGINT  UNSIGNED,id_editorial BIGINT UNSIGNED</td><td colspan="1" rowspan="1">id_libro: identifica el registrobibliográfico; el ISBN puedefaltar o requerir corrección.</td></tr><tr><td colspan="1" rowspan="1">Ejemplar</td><td colspan="1" rowspan="1">id_ejemplar  BIGINT   UNSIGNED, id_libroBIGINT      UNSIGNED,     codigo_inventarioVARCHAR(40),fecha_incorporacion DATEIME</td><td colspan="1" rowspan="1">id_ejemplar: identifica unacopia física específica. Dosejemplares del mismo librotienen identificadores distintos.</td></tr><tr><td colspan="1" rowspan="1">Prestamo</td><td colspan="1" rowspan="1">id_prestamo  BIGINT  UNSIGNED,id_socioBIGINT   UNSIGNED,id_ejemplar   BIGINTUNSIGNED,      id_bibliotecario       BIGINTUNSIGNED,      fecha_prestamo       DATEIME,fecha_vencimiento_inicial          DATEIME,fecha vencimiento actual            DATEIME,fecha devolucion DATEIME</td><td colspan="1" rowspan="1">id_prestamo: distingue lassucesivas ocasiones en que sepresta un mismo ejemplar.</td></tr><tr><td colspan="1" rowspan="1">LibroAutor</td><td colspan="1" rowspan="1">id_libro    BIGINT    UNSIGNED,  id_autorBIGINT         UNSIGNED,        orden_autoriaSMALLBIGINT UNSIGNED</td><td colspan="1" rowspan="1">PK compuesta (id_libro,id_autor): evita asociar dosveces al mismo autor con elmismo libro.</td></tr><tr><td colspan="1" rowspan="1">TelefonoSocio</td><td colspan="1" rowspan="1">id_socio     BIGINT     UNSIGNED,    numeroVARCHAR(25),tipo VARCHAR(20)</td><td colspan="1" rowspan="1">PK compuesta (id_socio,numero):permite  variosteléfonos por socio sin repetir elmismo número para ese socio.</td></tr></table>
+<table><tr><td colspan="1" rowspan="1">Entidad</td><td colspan="1" rowspan="1">Propiedades propuestas</td><td colspan="1" rowspan="1">Clave primaria (PK) y motivo</td></tr><tr><td colspan="1" rowspan="1">Socio</td><td colspan="1" rowspan="1">id_socio     BIGINT     UNSIGNED,    nombreVARCHAR(80),     apellido      VARCHAR(80),documento          VARCHAR(20),         emailVARCHAR(254),fecha_alta DATETIME</td><td colspan="1" rowspan="1">id_socio: identifica de formaestable al socio aunque cambiesu correo o se corrija sudocumento.</td></tr><tr><td colspan="1" rowspan="1">Bibliotecario</td><td colspan="1" rowspan="1">id_bibliotecario BIGINT UNSIGNED, nombreVARCHAR(80), apellido VARCHAR(80), legajoVARCHAR(30)</td><td colspan="1" rowspan="1">id_bibliotecario: mantienela identidad del empleadoaunque cambie su legajo.</td></tr><tr><td colspan="1" rowspan="1">Editorial</td><td colspan="1" rowspan="1">id_editorial   BIGINT   UNSIGNED,nombreVARCHAR(120)</td><td colspan="1" rowspan="1">id_editorial:      distingueeditorialesaunque  existannombres similares o cambiende denominación.</td></tr><tr><td colspan="1" rowspan="1">Autor</td><td colspan="1" rowspan="1">id_autor     BIGINT     UNSIGNED,    nombreVARCHAR(80), apellido VARCHAR(80)</td><td colspan="1" rowspan="1">id_autor: distingue personasque pueden compartir nombre yapellido.</td></tr><tr><td colspan="1" rowspan="1">Libro</td><td colspan="1" rowspan="1">id_libro     BIGINT     UNSIGNED,    tituloVARCHAR(200),       isbn        VARCHAR(17),anio_publicacion    SMALLINT    UNSIGNED,id_editorial BIGINT UNSIGNED</td><td colspan="1" rowspan="1">id_libro: identifica el registrobibliográfico; el ISBN puedefaltar o requerir corrección.</td></tr><tr><td colspan="1" rowspan="1">Ejemplar</td><td colspan="1" rowspan="1">id_ejemplar  BIGINT   UNSIGNED, id_libroBIGINT      UNSIGNED,     codigo_inventarioVARCHAR(40),fecha_incorporacion DATEIME</td><td colspan="1" rowspan="1">id_ejemplar: identifica unacopia física específica. Dosejemplares del mismo librotienen identificadores distintos.</td></tr><tr><td colspan="1" rowspan="1">Prestamo</td><td colspan="1" rowspan="1">id_prestamo  BIGINT  UNSIGNED,id_socioBIGINT    UNSIGNED,id_ejemplar   BIGINTUNSIGNED,      id_bibliotecario       BIGINTUNSIGNED,      fecha_prestamo       DATEIME,fecha_vencimiento_inicial          DATEIME,fecha vencimiento actual            DATEIME,fecha devolucion DATEIME</td><td colspan="1" rowspan="1">id_prestamo: distingue lassucesivas ocasiones en que sepresta un mismo ejemplar.</td></tr><tr><td colspan="1" rowspan="1">LibroAutor</td><td colspan="1" rowspan="1">id_libro    BIGINT    UNSIGNED,   id_autorBIGINT UNSIGNED, orden_autoriaSMALLINTUNSIGNED</td><td colspan="1" rowspan="1">PK compuesta (id_libro,id_autor): evita asociar dosveces al mismo autor con elmismo libro.</td></tr><tr><td colspan="1" rowspan="1">TelefonoSocio</td><td colspan="1" rowspan="1">id_socio     BIGINT     UNSIGNED,    numeroVARCHAR(25), tipo VARCHAR(20)</td><td colspan="1" rowspan="1">PK compuesta (id_socio,numero):permite  variosteléfonos por socio sin repetir elmismo número para ese socio.</td></tr></table>
 
 Los campos id\_... que apuntan a otra entidad serán claves foráneas (FK). Por ejemplo, Ejemplar.id\_libro referencia a Libro.id\_libro.
 
@@ -75,7 +86,7 @@ VARCHAR: textos de longitud variable. El documento, el ISBN, el legajo, el códi
 
 DATEIME: fechas para las que, en este alcance, no es necesario registrar la hora.
 
-SMALLBIGINT UNSIGNED: valores enteros no negativos y acotados, como el año de publicación y el orden de autoría.
+SMALLINT UNSIGNED: valores enteros no negativos y acotados, como el año de publicación y el orden de autoría.
 
 fecha\_devolucion podrá quedar vacía mientras el ejemplar no haya sido devuelto. El dato histórico será fecha\_vencimiento\_inicial: si se concede una renovación, se modifica fecha\_vencimiento\_actual, pero se conserva la fecha acordada originalmente.
 
@@ -313,7 +324,7 @@ SOCIO y BIBLIOTECARIO constituyen una excepción a la generación de identificad
 
 Las combinaciones obligatorias y únicas de LIBRO\_AUTOR y TELÉFONO\_SOCIO son claves candidatas compuestas que se conservan como alternativas a las PK subrogadas.
 
-El ISBN es opcional. Por ese motivo, su restricción de unicidad cuando está informado no lo convierte en una clave candidata válida para identificar todos los registros de LIBRO. El correo electrónico tampoco se considera clave candidata, porque puede faltar o ser compartido por distintas personas.
+El ISBN es obligatorio. Por ese motivo, su restricción de unicidad cuando está informado no lo convierte en una clave candidata válida para identificar todos los registros de LIBRO. El correo electrónico tampoco se considera clave candidata, porque puede faltar o ser compartido por distintas personas.
 
 Los nombres y apellidos no se utilizan como claves: no garantizan unicidad ni estabilidad.
 
@@ -437,13 +448,13 @@ Aunque inicialmente coincidan, ninguna determina necesariamente a la otra. Su co
 
 La integridad del modelo se establece mediante claves primarias, claves foráneas, obligatoriedad, unicidad y reglas del negocio.
 
-Las relaciones obligatorias requieren FK no nulas. fecha\_devolucion admite NULL mientras el préstamo permanezca pendiente. El correo electrónico y el ISBN también son opcionales.
+Las relaciones obligatorias requieren FK no nulas. fecha\_devolucion admite NULL mientras el préstamo permanezca pendiente. El correo electrónico es opcional y el ISBN es obligatorio.
 
 ## 3.4.1. Reglas de borrado
 
 Se prioriza la conservación del historial de préstamos. El sistema no incluye un proceso funcional de bajas; las siguientes reglas definen qué debe ocurrir si se intenta eliminar un registro.
 
-<table><tr><td colspan="1" rowspan="1">Registro que seintenta eliminar</td><td colspan="1" rowspan="1">Registros relacionados</td><td colspan="1" rowspan="1">Regla</td><td colspan="1" rowspan="1">Fundamento</td></tr><tr><td colspan="1" rowspan="1">PERSONA</td><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se elimina una identidad mientrasconserve el rol de socio.</td></tr><tr><td colspan="1" rowspan="1">PERSONA</td><td colspan="1" rowspan="1">BIBLIOTECARIO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se elimina una identidad mientrasconserve el rol de bibliotecario.</td></tr><tr><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se preserva la identificación de quienrecibió cada ejemplar.</td></tr><tr><td colspan="1" rowspan="1">BIBLIOTECARIO</td><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se preserva la identificación de quienregistró la operación.</td></tr><tr><td colspan="1" rowspan="1">EJEMPLAR</td><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se conserva la referencia a la copiafísica prestada.</td></tr><tr><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">EJEMPLAR</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se elimina un registro bibliográficoque todavía tiene copias registradas.</td></tr><tr><td colspan="1" rowspan="1">EDITORIAL</td><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se dejan libros sin su editorialobligatoria.</td></tr><tr><td colspan="1" rowspan="1">AUTOR</td><td colspan="1" rowspan="1">LIBRO_AUTOR</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se evita eliminar una autoríamediante el borrado del autor.</td></tr><tr><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">LIBRO AUTOR</td><td colspan="1" rowspan="1">CASCADE</td><td colspan="1" rowspan="1">Si puede eliminarse el libro, susasociaciones de autoría carecen deexistencia independiente.</td></tr><tr><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">TELÉFONO_SOCIO</td><td colspan="1" rowspan="1">CASCADE</td><td colspan="1" rowspan="1">Si puede eliminarse el socio, tambiénse eliminan sus registros de contacto.</td></tr></table>
+<table><tr><td colspan="1" rowspan="1">Registro que seintenta eliminar</td><td colspan="1" rowspan="1">Registros relacionados</td><td colspan="1" rowspan="1">Regla</td><td colspan="1" rowspan="1">Fundamento</td></tr><tr><td colspan="1" rowspan="1">PERSONA</td><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se elimina una identidad mientrasconserve el rol de socio.</td></tr><tr><td colspan="1" rowspan="1">PERSONA</td><td colspan="1" rowspan="1">BIBLIOTECARIO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se elimina una identidad mientrasconserve el rol de bibliotecario.</td></tr><tr><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se preserva la identificación de quienrecibió cada ejemplar.</td></tr><tr><td colspan="1" rowspan="1">BIBLIOTECARIO</td><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se preserva la identificación de quienregistró la operación.</td></tr><tr><td colspan="1" rowspan="1">EJEMPLAR</td><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se conserva la referencia a la copiafísica prestada.</td></tr><tr><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">EJEMPLAR</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se elimina un registro bibliográficoque todavía tiene copias registradas.</td></tr><tr><td colspan="1" rowspan="1">EDITORIAL</td><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">No se dejan libros sin su editorialobligatoria.</td></tr><tr><td colspan="1" rowspan="1">AUTOR</td><td colspan="1" rowspan="1">LIBRO_AUTOR</td><td colspan="1" rowspan="1">RESTRICT</td><td colspan="1" rowspan="1">Se evita eliminar unaautoríamediante el borrado del autor.</td></tr><tr><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">LIBRO AUTOR</td><td colspan="1" rowspan="1">CASCADE</td><td colspan="1" rowspan="1">Si puede eliminarse el libro, susasociaciones de autoría carecen deexistencia independiente.</td></tr><tr><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">TELÉFONO_SOCIO</td><td colspan="1" rowspan="1">CASCADE</td><td colspan="1" rowspan="1">Si puede eliminarse el socio, tambiénse eliminan sus registros de contacto.</td></tr></table>
 
 CASCADE solo actúa cuando el borrado del registro principal está permitido. Por ejemplo, un socio con préstamos registrados no puede eliminarse, por lo que tampoco se ejecuta el borrado en cascada de sus teléfonos.
 
@@ -501,7 +512,7 @@ LIBRO\_AUTOR registra orden\_autoria y no admite repetir la combinación libro�
 
 Un socio puede registrar varios teléfonos, sin repetir el mismo número para ese socio.
 
-● El ISBN es opcional; cuando está informado, debe ser único.
+● El ISBN es obligatorio; cuando está informado, debe ser único.
 
 ● El correo electrónico es opcional y puede compartirse.
 
@@ -532,7 +543,7 @@ No reescribas el modelo completo, no amplíes el alcance y no propongas formas n
 Tabla con hallazgo, fundamento, corrección propuesta e impacto. Identificá los supuestos que no puedan comprobarse con la información suministrada.
 
 3.5.2. Hallazgos y revisión humana
-<table><tr><td colspan="1" rowspan="1">Hallazgo u observación</td><td colspan="1" rowspan="1">Clasificación</td><td colspan="1" rowspan="1">Decisión y fundamento</td></tr><tr><td colspan="1" rowspan="1">TELÉFONO_SOCIO          teníaidentificadores diferentes entrelas partes del documento.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se adopta id_telefono_socio y seconserva UNIQUE (id_socio, numero).</td></tr><tr><td colspan="1" rowspan="1">Los   datos   personales   seduplicarían si un bibliotecariotambién fuera socio.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se acepta PERSONA como entidadgeneral y se mantienen los atributosespecíficos en cada rol.</td></tr><tr><td colspan="1" rowspan="1">Las FK de préstamos y teléfonosdeben    adecuarse    a    losidentificadores        de       lasespecializaciones.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se mantienen los nombres queexpresan el rol, pero se referencianlas PK id_persona de SOCIO yBIBLIOTECARIO.</td></tr><tr><td colspan="1" rowspan="1">Conviene reemplazar la PKcompuesta de LIBRO_AUTORpor una subrogada.</td><td colspan="1" rowspan="1">Discutible</td><td colspan="1" rowspan="1">Ambas opciones son válidas. Seadopta la subrogada para seguir elcriterio del curso, conservandoUNIQUE (id_libro, id_autor).</td></tr><tr><td colspan="1" rowspan="1">Falta definir las reglas deborrado.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se incorporan reglas explícitas quepreservan el historial y eliminanúnicamente registros dependientescuando corresponde.</td></tr><tr><td colspan="1" rowspan="1">El atributo estado aparece en losprompts, pero no en ladescripción inicial de EJEMPLAR.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se incorpora al esquema y se limita aoperativo y en_reparacion.</td></tr><tr><td colspan="1" rowspan="1">EI ISBN se presentaconobligatoriedad ambigua.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se establece que es opcional y únicocuando está informado.</td></tr><tr><td colspan="1" rowspan="1">Debe comprobarse 2FN aunquelas PK sean simples.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se revisan también las clavescandidatas compuestas de las tablasasociativas.</td></tr></table>
+<table><tr><td colspan="1" rowspan="1">Hallazgo u observación</td><td colspan="1" rowspan="1">Clasificación</td><td colspan="1" rowspan="1">Decisión y fundamento</td></tr><tr><td colspan="1" rowspan="1">TELÉFONO_SOCIO          teníaidentificadores diferentes entrelas partes del documento.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se adopta id_telefono_socio y seconserva UNIQUE (id_socio, numero).</td></tr><tr><td colspan="1" rowspan="1">Los   datos   personales   seduplicarían si un bibliotecariotambién fuera socio.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se acepta PERSONA como entidadgeneral y se mantienen los atributosespecíficos en cada rol.</td></tr><tr><td colspan="1" rowspan="1">Las FK de préstamos y teléfonosdeben    adecuarse    a    losidentificadores        de       lasespecializaciones.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se mantienen los nombres queexpresan el rol, pero se referencianlas PK id_persona de SOCIO yBIBLIOTECARIO.</td></tr><tr><td colspan="1" rowspan="1">Conviene reemplazar la PKcompuesta de LIBRO_AUTORpor una subrogada.</td><td colspan="1" rowspan="1">Discutible</td><td colspan="1" rowspan="1">Ambas opciones son válidas. Seadopta la subrogada para seguir elcriterio del curso, conservandoUNIQUE (id_libro, id_autor).</td></tr><tr><td colspan="1" rowspan="1">Falta definir las reglas deborrado.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se incorporan reglas explícitas quepreservan el historial y eliminanúnicamente registros dependientescuando corresponde.</td></tr><tr><td colspan="1" rowspan="1">El atributo estado aparece en losprompts, pero no en ladescripción inicial de EJEMPLAR.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se incorpora al esquema y se limita aoperativo y en_reparacion.</td></tr><tr><td colspan="1" rowspan="1">EI ISBN se presentaconobligatoriedad ambigua.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se establece que es obligatorio yúnico cuando está informado.</td></tr><tr><td colspan="1" rowspan="1">Debe comprobarse 2FN aunquelas PK sean simples.</td><td colspan="1" rowspan="1">Correcto</td><td colspan="1" rowspan="1">Se revisan también las clavescandidatas compuestas de las tablasasociativas.</td></tr></table>
 
 Se descartan dos posibles correcciones que perjudicarían el diseño: eliminar fecha\_vencimiento\_inicial por coincidir inicialmente con el vencimiento actual, y dirigir los préstamos exclusivamente a PERSONA. La primera perdería información histórica; la segunda no garantizaría los roles de socio y bibliotecario.  
 No se identifican violaciones adicionales de 1FN, 2FN o 3FN bajo las reglas declaradas. Este resultado deberá contrastarse con el diagrama actualizado para verificar que su representación coincida con el diseño documentado.
@@ -543,7 +554,7 @@ El modelo refactorizado queda definido por diez entidades. Las nueve entidades i
 
 ## 3.6.1. Esquema de referencia para el diagrama
 
-<table><tr><td>Entidad</td><td>Atributos definitivos</td></tr><tr><td colspan="1" rowspan="1">PERSONA</td><td colspan="1" rowspan="1">id_persona PK, nombre, apellido, documento UNIQUE yobligatorio, email opcional</td></tr><tr><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">id_persona PK/FK hacia PERSONA, fecha_alta</td></tr><tr><td colspan="1" rowspan="1">BIBLIOTECARIO</td><td colspan="1" rowspan="1">id_persona PK/FK hacia PERSONA, legajo UNIQUE y obligatorio</td></tr><tr><td colspan="1" rowspan="1">EDITORIAL</td><td colspan="1" rowspan="1">id_editorial PK, nombre</td></tr><tr><td colspan="1" rowspan="1">AUTOR</td><td colspan="1" rowspan="1">id_autor PK, nombre, apellido</td></tr><tr><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">id_libro PK, titulo, isbn opcional y UNIQUE, anio_publicacion,id_editorial FK</td></tr><tr><td colspan="1" rowspan="1">EJEMPLAR</td><td colspan="1" rowspan="1">id_ejemplar PK, id_libro FK, codigo_inventario UNIQUE yobligatorio, fecha_incorporacion, estado</td></tr><tr><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">id_prestamo PK, id_socio FK hacia SOCIO.id_persona,id_ejemplar        FK,        id_bibliotecario        FK        haciaBIBLIOTECARIO.id_persona,                           fecha_prestamo,fecha_vencimiento_inicial,                  fecha_vencimiento_actual,fecha_devolucion opcional</td></tr><tr><td colspan="1" rowspan="1">LIBRO_AUTOR</td><td colspan="1" rowspan="1">id_libro_autor PK, id_libro FK, id_autor FK, orden_autoria;UNIQUE (id_libro, id_autor)</td></tr><tr><td colspan="1" rowspan="1">TELÉFONO_SOCIO</td><td colspan="1" rowspan="1">id_telefono_socio PK, id_socio FK hacia SOCIO.id_persona,numero, tipo; UNIQUE (id_socio, numero)</td></tr></table>
+<table><tr><td>Entidad</td><td>Atributos definitivos</td></tr><tr><td colspan="1" rowspan="1">PERSONA</td><td colspan="1" rowspan="1">id_persona PK, nombre, apellido, documento UNIQUE yobligatorio, email opcional</td></tr><tr><td colspan="1" rowspan="1">SOCIO</td><td colspan="1" rowspan="1">id_persona PK/FK hacia PERSONA, fecha_alta</td></tr><tr><td colspan="1" rowspan="1">BIBLIOTECARIO</td><td colspan="1" rowspan="1">id_persona PK/FK hacia PERSONA, legajo UNIQUE y obligatorio</td></tr><tr><td colspan="1" rowspan="1">EDITORIAL</td><td colspan="1" rowspan="1">id_editorial PK, nombre</td></tr><tr><td colspan="1" rowspan="1">AUTOR</td><td colspan="1" rowspan="1">id_autor PK, nombre, apellido</td></tr><tr><td colspan="1" rowspan="1">LIBRO</td><td colspan="1" rowspan="1">id_libro PK, titulo, isbn obligatorio y UNIQUE, anio_publicacion,id_editorial FK</td></tr><tr><td colspan="1" rowspan="1">EJEMPLAR</td><td colspan="1" rowspan="1">id_ejemplar PK, id_libro FK, codigo_inventario UNIQUE yobligatorio, fecha_incorporacion, estado</td></tr><tr><td colspan="1" rowspan="1">PRÉSTAMO</td><td colspan="1" rowspan="1">id_prestamo PK, id_socio FK hacia SOCIO.id_persona,id_ejemplar        FK,        id_bibliotecario        FK        haciaBIBLIOTECARIO.id_persona,                           fecha_prestamo,fecha_vencimiento_inicial,                  fecha_vencimiento_actual,fecha_devolucion opcional</td></tr><tr><td colspan="1" rowspan="1">LIBRO_AUTOR</td><td colspan="1" rowspan="1">id_libro_autor PK, id_libro FK, id_autor FK, orden_autoria;UNIQUE (id_libro, id_autor)</td></tr><tr><td colspan="1" rowspan="1">TELÉFONO_SOCIO</td><td colspan="1" rowspan="1">id_telefono_socio PK, id_socio FK hacia SOCIO.id_persona,numero, tipo; UNIQUE (id_socio, numero)</td></tr></table>
 
 El diagrama mantiene las ocho relaciones de la Parte 2 y agrega las dos relaciones de especialización. Cada PERSONA puede tener cero o una fila en cada especialización, pero debe tener al menos uno de los dos roles. Esta condición conjunta se documenta mediante la nota “Especialización total y superpuesta”.
 
@@ -601,7 +612,7 @@ libro
 
 Se agregó la creación de la base biblioteca y su selección mediante USE. En todas las tablas se declaró el motor InnoDB, que permite implementar claves foráneas, y el juego de caracteres utf8mb4.
 
-Se conservaron las decisiones del modelo anterior: la identidad común en persona, los roles de socio y bibliotecario mediante claves que son simultáneamente PK y FK, la separación entre libro y ejemplar, y la relación N entre libros y autores resuelta mediante libro\_autor.
+Se conservaron las decisiones del modelo anterior: la identidad común en persona, los roles de socio y bibliotecario mediante claves que son simultáneamente PK y FK, la separación entre libro y ejemplar, y la relación N:M entre libros y autores resuelta mediante libro\_autor.
 
 ## 4.3. Restricciones e integridad
 
@@ -853,67 +864,86 @@ ADD CONSTRAINT chk_orden_autoria
 
 CHECK (orden\_autoria > 0);
 
-## Actividad 5 · Preguntas de negocio y resultados esperados
+## Parte 5 · Carga de datos de prueba y consultas de negocio
 
-Las preguntas se plantean sobre la base de datos de biblioteca y el set de prueba preparado. Los resultados indicados suponen que se ejecutaron correctamente los scripts de personas, teléfonos, autores, editoriales, libros y ejemplares. En esta etapa se define qué queremos consultar y qué esperamos encontrar; las consultas SQL se resolverán después.
+Con el esquema de la base de datos de biblioteca creado en la etapa anterior, se preparó un conjunto de datos ficticios para probar las restricciones y las consultas del sistema. La carga se organizó mediante scripts SQL independientes para facilitar su ejecución y revisión.
 
-N.º Pregunta de negocio
+El conjunto previsto incluye 50 personas —45 socios y 5 bibliotecarios—, 110 autores, 30 editoriales, 50 libros, 55 teléfonos asociados a los socios y 101 ejemplares. Cada libro tiene entre uno y tres ejemplares. Cuatro ejemplares están marcados como en reparación y los restantes, como operativos. Los títulos de los libros y los datos de contacto son ficticios; los ISBN utilizados son valores sintéticos de prueba.
 
-Resultado esperado y análisis
+A partir de estos datos se formularon 20 preguntas de negocio relacionadas con la gestión de socios, el catálogo, las editoriales, los autores y el inventario. Entre ellas se incluyeron consultas para contar registros, filtrar títulos, agrupar libros por año de publicación, identificar editoriales sin libros asociados, verificar libros sin autor o sin ejemplares y conocer la distribución de ejemplares por estado. Para cada pregunta se definió un resultado esperado, que sirve como referencia para evaluar la consulta.
 
-1 ¿Cuántas personas están 50 personas. Corresponden a las 45 personas con rol de socio y registradas en la biblioteca? las 5 con rol de bibliotecario.
+Las consultas se reunieron en un script SQL de solo lectura. Se utilizaron operaciones como WHERE, LIKE, GROUP BY, HAVING, ORDER BY y COUNT, además de JOIN y NOT EXISTS para consultar información relacionada entre tablas. Los resultados esperados se anotaron como comentarios en el archivo para facilitar la comparación con los resultados obtenidos al ejecutar cada consulta.
 
-2 ¿Cuántas personas tienen rol de 45 socios. Permite verificar la carga de personas y la tabla de socio? roles. Requiere relacionar persona con socio.
+## 5.1 Observación de verificación
 
-3 ¿Cuántas personas trabajan como 5 bibliotecarios. Requiere relacionar persona con bibliotecarias? bibliotecario.
+Durante la comprobación de la pregunta sobre editoriales sin libros asociados, la consulta devolvió 41 registros, cuando el resultado esperado era 11. La revisión permitió detectar que las 30 editoriales se habían cargado nuevamente, generando registros duplicados. Se preparó un script para identificar y eliminar las últimas 30 filas duplicadas que no estén asociadas a libros. La limpieza y la nueva ejecución de la consulta deben confirmarse antes de presentar 11 como resultado observado.
 
-4 ¿Hay personas sin correo Ninguna. Las 50 personas del set tienen correo de prueba. electrónico registrado?
+Esta etapa deja preparados el conjunto de datos, las preguntas de negocio y sus consultas SQL para verificar el funcionamiento de la base. La comparación de las consultas manuales con las generadas mediante IA deberá documentarse una vez que ambas versiones se ejecuten sobre la misma base cargada y depurada.
 
-5 ¿Cuántos teléfonos se registraron 55 teléfonos para 45 socios. Cada socio tiene un teléfono y cuántos socios tienen al menos principal; 10 tienen además uno alternativo. Requiere relacionar uno? telefono\_socio, socio y persona.
+Los scripts de carga y consultas SQL elaborados para esta etapa se encuentran en el directorio SQL del proyecto, junto con los demás archivos SQL utilizados en su desarrollo. Allí se organizan las cargas de personas, autores, editoriales, libros, teléfonos y ejemplares, además del script con las 20 consultas de negocio.
 
-6 ¿Cuántos socios tienen un 35 socios tienen uno y 10 tienen dos. La consulta permite teléfono y cuántos tienen dos? comprobar que se contemplan varios teléfonos por socio.
+## 5.2 Consultas a la base de datos
 
-7 ¿Cuántos autores están 110 autores. Se espera ese total si la tabla estaba vacía antes de registrados? ejecutar la carga.
+Las preguntas se plantean sobre la base de datos de la biblioteca y el set de prueba preparado. Los resultados indicados suponen que se ejecutaron correctamente los scripts de personas, teléfonos, autores, editoriales, libros y ejemplares. En esta etapa se define qué queremos consultar y qué esperamos encontrar.
 
-8 ¿Cuántos autores tienen al menos 50 autores tienen un libro asociado y 60 no tienen libros un libro asociado y cuántos asociados. La carga actual asigna un autor a cada uno de los 50 todavía no tienen ninguno? libros. Requiere relacionar autor, libro\_autor y libro.
+<table><tr><td colspan="1" rowspan="1">N.º</td><td colspan="1" rowspan="1">Pregunta de negocio</td><td colspan="1" rowspan="1">Resultado esperado y análisis</td></tr><tr><td colspan="1" rowspan="1">1</td><td colspan="1" rowspan="1">¿Cuántas     personas     estánregistradas en la biblioteca?</td><td colspan="1" rowspan="1">50 personas. Corresponden a las 45 personas con rol de socio ylas 5 con rol de bibliotecario.</td></tr><tr><td colspan="1" rowspan="1">2</td><td colspan="1" rowspan="1">¿Cuántas personas tienen rol desocio?</td><td colspan="1" rowspan="1">45 socios. Permite verificar la carga de personas y la tabla deroles. Requiere relacionar persona con socio.</td></tr><tr><td colspan="1" rowspan="1">3</td><td colspan="1" rowspan="1">¿Cuántas personas trabajan comobibliotecarias?</td><td colspan="1" rowspan="1">5 bibliotecarios. Requiere relacionarpersona  conbibliotecario</td></tr><tr><td colspan="1" rowspan="1">4</td><td colspan="1" rowspan="1">¿Hay  personas  sin   correoelectrónico registrado?</td><td colspan="1" rowspan="1">Ninguna. Las 50 personas del set tienen correo de prueba.</td></tr><tr><td colspan="1" rowspan="1">5</td><td colspan="1" rowspan="1">¿Cuántos teléfonos se registrarony cuántos socios tienen al menosuno?</td><td colspan="1" rowspan="1">55 teléfonos para 45 socios. Cada socio tiene un teléfonoprincipal; 10 tienen además uno alternativo. Requiere relacionartelefono_socio, socio y persona.</td></tr><tr><td colspan="1" rowspan="1">6</td><td colspan="1" rowspan="1">¿Cuántos socios tienen  unteléfono y cuántos tienen dos?</td><td colspan="1" rowspan="1">35 socios tienen uno y 10 tienen dos. La consulta permitecomprobar que se contemplan varios teléfonos por socio.</td></tr><tr><td colspan="1" rowspan="1">7</td><td colspan="1" rowspan="1">¿Cuántos     autores     estánregistrados?</td><td colspan="1" rowspan="1">110 autores. Se espera ese total si la tabla estaba vacía antes deejecutar la carga</td></tr><tr><td colspan="1" rowspan="1">8</td><td colspan="1" rowspan="1">¿Cuántos autores tienen al menosun libro asociado y cuántostodavía no tienen ninguno?</td><td colspan="1" rowspan="1">50 autores tienen un libro asociado y 60 no tienen librosasociados. La carga actual asigna un autor a cada uno de los 50libros. Requiere relacionar autor, libro_autor y libro.</td></tr><tr><td colspan="1" rowspan="1">9</td><td colspan="1" rowspan="1">¿Cuántas    editoriales    estánregistradas?</td><td colspan="1" rowspan="1">30 editoriales.</td></tr><tr><td colspan="1" rowspan="1">10</td><td colspan="1" rowspan="1">¿Cuántas editoriales todavía nopublican libros en el catálogo deprueba?</td><td colspan="1" rowspan="1">11 editoriales. De las 30 cargadas, 19 se asignaron a los libros.</td></tr><tr><td colspan="1" rowspan="1">11</td><td colspan="1" rowspan="1">¿Cuántos  libros  integran elcatálogo?</td><td colspan="1" rowspan="1">50 libros.</td></tr><tr><td colspan="1" rowspan="1">12</td><td colspan="1" rowspan="1">¿Cuántos títulos comienzan con“El”?</td><td colspan="1" rowspan="1">18 títulos. La búsqueda debe considerar el comienzo del título,no las apariciones de “el” en otras posiciones</td></tr><tr><td colspan="1" rowspan="1">13</td><td colspan="1" rowspan="1">¿Cuántos libros se publicaron encada año del set?</td><td colspan="1" rowspan="1">Se esperan estos resultados: 2017: 4; 2018: 7; 2019: 7; 2020: 9;2021: 8; 2022: 6; 2023: 5; 2024: 4. La suma debe ser 50.</td></tr><tr><td colspan="1" rowspan="1">14</td><td colspan="1" rowspan="1">¿Qué editoriales tienen más librosen este catálogo de prueba?</td><td colspan="1" rowspan="1">Alfaguara y HarperCollins, con 5 libros cada una. Es elmáximo del set.</td></tr><tr><td colspan="1" rowspan="1">15</td><td colspan="1" rowspan="1">¿Hay libros sin autor asociado?</td><td colspan="1" rowspan="1">Ninguno. Cada libro tiene una asociación con un autor enlibro_autor.</td></tr><tr><td colspan="1" rowspan="1">16</td><td colspan="1" rowspan="1">¿Hay libros sin ejemplaresregistrados?</td><td colspan="1" rowspan="1">Ninguno. Cada uno de los 50 libros recibió entre 1 y 3ejemplares.</td></tr><tr><td colspan="1" rowspan="1">17</td><td colspan="1" rowspan="1">¿Cuántos libros tienen uno, dos otres ejemplares?</td><td colspan="1" rowspan="1">16 libros tienen uno; 17 tienen dos; 17 tienen tres. En totaldeben ser 50 libros. Requiere agrupar los ejemplares por libro.</td></tr><tr><td colspan="1" rowspan="1">18</td><td colspan="1" rowspan="1">¿Cuántos   ejemplares   estánoperativos   y   cuántos   enreparación?</td><td colspan="1" rowspan="1">97 operativos y 4 en reparación, sobre un total de 101ejemplares.</td></tr><tr><td colspan="1" rowspan="1">19</td><td colspan="1" rowspan="1">¿Qué títulos tienen ejemplares enreparación?</td><td colspan="1" rowspan="1">El último tren de la memoria, Pequeño atlas de la noche, Losnombres del bosque profundo y El mapa de los pájarosazules. Cada uno tiene un ejemplar en reparación y conserva almenos uno operativo.</td></tr><tr><td colspan="1" rowspan="1">20</td><td colspan="1" rowspan="1">¿Qué libros tienen menos de tresejemplares, para evaluar siconviene ampliar el inventario?</td><td colspan="1" rowspan="1">33 libros: los 16 que tienen un ejemplar y los 17 que tienen dos.Los otros 17 ya cuentan con tres ejemplares.</td></tr></table>
 
-9 ¿Cuántas editoriales están 30 editoriales. registradas?
+## Parte 6 · Consultas de negocio y análisis de resultados
 
-10 ¿Cuántas editoriales todavía no 11 editoriales. De las 30 cargadas, 19 se asignaron a los libros. publican libros en el catálogo de prueba?
+En esta etapa se preparó el conjunto de consultas de lectura para responder preguntas de negocio relacionadas con la biblioteca. Las consultas se documentaron en el archivo 07\_consultas\_20\_preguntas\_biblioteca.sql; cada una incluye la pregunta que busca responder y, cuando corresponde, el resultado esperado para los datos de prueba cargados.
 
-11 ¿Cuántos libros integran el 50 libros. catálogo?
+Las veinte preguntas abarcan el registro de personas, socios y bibliotecarios; los teléfonos de los socios; la cantidad de autores, editoriales, libros y ejemplares; la distribución de libros por año; las editoriales con más títulos; los libros sin autor o sin ejemplares; el estado de los ejemplares y los títulos con menos de tres copias. De esta manera, las consultas permiten explorar información de distintas áreas del modelo y comprobar la coherencia de los datos ingresados.
 
-12 ¿Cuántos títulos comienzan con 18 títulos. La búsqueda debe considerar el comienzo del título, “El”? no las apariciones de “el” en otras posiciones.
+Para resolverlas se utilizaron operaciones de selección y filtrado, combinaciones mediante JOIN y LEFT JOIN, funciones de agregación como COUNT, agrupamientos con GROUP BY, condiciones sobre grupos mediante HAVING y subconsultas. También se utilizaron EXISTS y NOT EXISTS para detectar registros relacionados o sin relación, como las editoriales sin libros asociados. Algunas consultas emplean tablas derivadas o subconsultas escalares para calcular cantidades intermedias.
 
-¿Cuántos libros se publicaron en cada año del set?
+Los resultados esperados del script corresponden al conjunto de pruebas cargadas. Entre ellos se encuentran 50 personas —45 socios y 5 bibliotecarios—, 55 teléfonos, 110 autores, 30 editoriales, 50 libros y 101 ejemplares. También se prevé identificar 11 editoriales sin libros, una distribución de ejemplares de 16 libros con una copia, 17 con dos y 17 con tres, y 33 libros con menos de tres ejemplares. Estos valores se utilizaron como referencia para revisar la salida de las consultas.
 
-¿Qué editoriales tienen más libros en este catálogo de prueba?
+Durante esa validación, la consulta sobre editoriales sin libros devolvió inicialmente 41 registros, aunque el resultado esperado era 11. La revisión permitió detectar 30 registros de editoriales duplicados. Para tratarlos se preparó el archivo 08\_eliminar\_editoriales\_duplicadas.sql: selecciona las filas duplicadas más recientes, muestra previamente cuántos libros están asociados a cada una y elimina únicamente las que no tienen libros vinculados. El procedimiento incluye una comprobación posterior de la cantidad de registros, los nombres distintos y los posibles duplicados. Así, la corrección contempla tanto la calidad de los datos como la conservación de las relaciones existentes.
 
-15 ¿Hay libros sin autor asociado?
+La revisión de los resultados tuvo en cuenta que los JOIN pueden multiplicar filas cuando intervienen relaciones de uno a muchos. Por eso, en las consultas que cuentan autores, libros o ejemplares se consideró qué entidad debía contarse y cuándo correspondía utilizar DISTINCT, una agregación previa o una subconsulta. Esta comprobación es necesaria para que los totales representen los registros de negocio y no las filas intermedias producidas por la combinación de tablas.
 
-¿Hay libros sin ejemplares registrados?
+## Parte 7 · Integración de la base de datos con Python e inteligencia artificial
 
-17 ¿Cuántos libros tienen uno, dos o tres ejemplares?
+En esta etapa se integró la base de datos de la biblioteca con componentes de software que permiten consultarla desde Python y desde una interfaz gráfica. El trabajo comprende la incorporación de un servidor MCP, la ejecución de consultas SQL desde el código, el uso de consultas parametrizadas y la definición de permisos diferenciados para los usuarios.
 
-¿Cuántos ejemplares están operativos y cuántos en reparación?
+## 7.1. Integración mediante MCP
 
-¿Qué títulos tienen ejemplares en reparación?
+El proyecto incorpora un servidor MCP implementado en mcp\_server.py. MCP —Model Context Protocol— permite que una aplicación de inteligencia artificial se comunique con herramientas externas mediante una interfaz definida. En este caso, el servidor actúa como intermediario entre el cliente de IA y las operaciones disponibles sobre la base de datos.
 
-Se esperan estos resultados: 2017: 4; 2018: 7; 2019: 7; 2020: 9;   
-2021: 8; 2022: 6; 2023: 5; 2024: 4. La suma debe ser 50.
+Cuando el cliente solicita una operación, el servidor recibe la petición, ejecuta la función asociada y devuelve el resultado. De este modo, la IA puede interactuar con las capacidades expuestas por el proyecto sin conectarse directamente a la base de datos desde la conversación. La implementación vincula el protocolo con el sistema de biblioteca y permite incorporar consultas de la base como herramientas disponibles para el cliente MCP.
 
-Alfaguara y HarperCollins, con 5 libros cada una. Es el máximo del set.
+## 7.2. Conexión de Python con MySQL
 
-Ninguno. Cada libro tiene una asociación con un autor en libro\_autor.
+El sistema establece desde Python una conexión con MySQL para acceder a la base biblioteca. La conexión permite ejecutar desde el código las consultas SQL preparadas para el trabajo, recuperar sus resultados y utilizarlos en la aplicación.
 
-Ninguno. Cada uno de los 50 libros recibió entre 1 y 3 ejemplares.
+Las consultas de negocio definidas previamente en SQL se trasladaron al entorno Python para ejecutarlas desde el programa. El flujo general consiste en abrir la conexión, preparar y ejecutar la consulta, obtener las filas devueltas y presentarlas en la aplicación. Al finalizar la operación, se liberan los recursos utilizados por el cursor y la conexión.
 
-16 libros tienen uno; 17 tienen dos; 17 tienen tres. En total deben ser 50 libros. Requiere agrupar los ejemplares por libro.
+Esta integración permite trabajar con una misma fuente de datos desde la consola MCP y desde la aplicación, evitando mantener copias independientes de la información.
 
-97 operativos y 4 en reparación, sobre un total de 101 ejemplares.
+## 7.3. Consultas parametrizadas e inyección SQL
 
-El último tren de la memoria, Pequeño atlas de la noche, Los nombres del bosque profundo y El mapa de los pájaros azules. Cada uno tiene un ejemplar en reparación y conserva al menos uno operativo.
+La inyección SQL es una vulnerabilidad que puede producirse cuando un programa construye una sentencia SQL concatenando directamente los datos ingresados por una persona. Si esos datos contienen fragmentos de SQL, el motor podría interpretarlos como parte de la consulta y alterar su comportamiento. Por ejemplo, una entrada manipulada en un formulario de acceso podría modificar la condición de búsqueda y permitir consultar registros que no corresponden
 
-20 ¿Qué libros tienen menos de tres 33 libros: los 16 que tienen un ejemplar y los 17 que tienen dos. ejemplares, para evaluar si Los otros 17 ya cuentan con tres ejemplares. conviene ampliar el inventario?
+Para evitar este problema, el proyecto utiliza consultas parametrizadas: la sentencia SQL se define por separado y los valores ingresados se envían al controlador como parámetros. El controlador trata esos valores como datos, no como instrucciones SQL.
 
-Varias preguntas requieren combinar tablas —por ejemplo, para relacionar socios con teléfonos o libros con autores—, por lo que se resolverán con JOIN, tema previsto para la Clase 6. Las preguntas sobre conteos, filtros, ordenamientos y años pueden trabajarse con los contenidos de la Clase 5.
+La parametrización protege los valores de entrada y mejora la claridad de las consultas. Cuando se necesita seleccionar dinámicamente un nombre de tabla o columna, ese identificador no se reemplaza con un parámetro común; debe controlarse mediante opciones permitidas definidas por el programa.
+
+## 7.4. Interfaz gráfica de gestión
+
+El proyecto incorpora una interfaz gráfica básica para operar sobre la base de datos de la biblioteca. La aplicación permite realizar altas y consultas y, según el perfil habilitado, otras operaciones de gestión. La interfaz se comunica con el servidor de la aplicación, que ejecuta las operaciones correspondientes sobre MySQL.
+
+La separación entre interfaz, lógica de aplicación y base de datos permite que los datos no se modifiquen directamente desde la página. El servidor recibe las solicitudes, aplica las reglas de acceso y utiliza la conexión a MySQL para completar la operación.
+
+## 7.5. Usuarios, roles y permisos
+
+El acceso a las funciones se organiza mediante dos roles:
+
+<table><tr><td rowspan=1 colspan=1>Usuario</td><td rowspan=1 colspan=1>Permisos</td></tr><tr><td rowspan=1 colspan=1>admin</td><td rowspan=1 colspan=1>Acceso completo a las funciones de gestión, incluidas las operaciones de alta, consulta,modificación y eliminación.</td></tr><tr><td rowspan=1 colspan=1>user</td><td rowspan=1 colspan=1>Acceso de consulta. Puede visualizar información, pero no crear, modificar ni eliminar registros.</td></tr></table>
+
+La aplicación utiliza el rol para determinar qué operaciones puede realizar cada usuario. Las funciones de escritura deben quedar restringidas tanto en la interfaz como en la lógica del servidor, de modo que ocultar un botón no sea la única medida de protección. Así, una solicitud de modificación enviada directamente al servidor también debe ser rechazada cuando proviene de un usuario con permisos de solo lectura.
+
+## 7.6. Resultado de la integración
+
+La integración reúne en un mismo proyecto la base de datos MySQL, las consultas SQL, la aplicación Python, la interfaz gráfica y el servidor MCP. Esto permite consultar y gestionar la información de la biblioteca desde la aplicación y exponer operaciones seleccionadas a clientes compatibles con MCP.
+
+El desarrollo también permite observar la importancia de separar responsabilidades: MySQL conserva y relaciona los datos; Python implementa la lógica de acceso; la interfaz presenta las funciones a las personas usuarias; el control de roles limita las operaciones; y MCP ofrece una vía estandarizada para que una aplicación de inteligencia artificial utilice las herramientas expuestas por el sistema.

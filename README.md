@@ -137,15 +137,74 @@ y la creación del esquema antes de ejecutarlos.
 Los archivos de carga hacen inserciones reales. No los ejecutes sobre una base
 existente sin revisar previamente su contenido.
 
-### Consultas parametrizadas e inyección SQL
+### Consultas de negocio de la Parte 6
 
 La aplicación implementa las veinte preguntas del archivo
 `07_consultas_20_preguntas_biblioteca.sql` mediante expresiones SQLAlchemy en
 `app/services/report_queries.py`. Los resultados se pueden consultar desde
-`/consultas`. Cinco informes combinan tres tablas: personas, socios y teléfonos;
-autores, autorías y libros; editoriales, libros y autorías; y dos informes de
-editoriales, libros y ejemplares. Los conteos susceptibles a multiplicación por
-las uniones emplean `COUNT(DISTINCT ...)`.
+`/consultas`.
+
+Los cinco informes que combinan tres tablas son:
+
+| N.º | Pregunta resumida | Tablas combinadas |
+|---:|---|---|
+| 5 | Teléfonos registrados y socios con teléfono | `persona`, `socio`, `telefono_socio` |
+| 8 | Autores con libros y sin libros | `autor`, `libro_autor`, `libro` |
+| 14 | Editoriales con mayor cantidad de libros | `editorial`, `libro`, `libro_autor` |
+| 19 | Libros con ejemplares en reparación | `editorial`, `libro`, `ejemplar` |
+| 20 | Libros con menos de tres ejemplares | `editorial`, `libro`, `ejemplar` |
+
+En el informe 14, `libro_autor` permite exponer y controlar la multiplicación
+de un libro con varios autores, aunque no es indispensable para responder qué
+editorial tiene más libros. Si se exige que las tres tablas sean necesarias para
+la pregunta de negocio, este informe debe reemplazarse por otro que cumpla ese
+criterio de forma sustantiva.
+
+Las consultas 6, 13, 14, 17, 18, 19 y 20 emplean agregación con `GROUP BY`.
+Las consultas 14 y 20 agregan `HAVING`. Las consultas 6, 10, 14 y 17 contienen
+subconsultas, ya sea como tabla derivada, `NOT EXISTS` o subconsulta escalar.
+
+Los conteos susceptibles a multiplicación por las uniones emplean
+`COUNT(DISTINCT ...)`. Esto se aplica a socios, teléfonos, autores y libros en
+las consultas 5, 8 y 14. Las pruebas automatizadas incluyen relaciones de uno a
+muchos para comprobar que esos totales no se dupliquen.
+
+Cada sentencia del archivo SQL incluye su pregunta de negocio y el resultado
+esperado para el set de carga. La pantalla `/consultas` muestra el resultado
+obtenido en la base conectada, pero actualmente no compara ese valor con el
+esperado ni conserva evidencia de una ejecución sobre MySQL. Las pruebas usan un
+set reducido en SQLite y verifican la lógica de las veinte consultas; no
+acreditan por sí solas los totales previstos para el set completo de MySQL.
+
+### EXPLAIN y optimización
+
+`08_explain_optimizacion.sql` prepara la comparación del informe 19 antes y
+después de crear el índice compuesto
+`ix_ejemplar_estado_codigo_libro (estado, codigo_inventario, id_libro)`. El
+procedimiento ejecuta la misma consulta en ambos casos e indica comparar
+`type`, `key`, `rows` y `Extra`.
+
+El script no constituye evidencia de ejecución por sí mismo. Para completar la
+actividad deben conservarse las dos salidas reales de `EXPLAIN` y documentarse
+la comparación. Como `CREATE INDEX` y `ANALYZE TABLE` modifican el esquema o sus
+estadísticas, deben ejecutarse de forma controlada y no forman parte del arranque
+de la aplicación ni de las pruebas automatizadas.
+
+### Estado de la documentación de la Parte 6
+
+La implementación SQL y Python está disponible, pero `docs/content.md` y el PDF
+local todavía terminan en la Actividad 5. La entrega documental de la Parte 6
+debe incorporar:
+
+1. el SQL, resultado esperado, resultado obtenido y comprobación de cada
+   consulta;
+2. la justificación de los `JOIN`, agregaciones, `HAVING` y subconsultas;
+3. el control de totales potencialmente duplicados por relaciones uno a muchos;
+4. los planes reales de `EXPLAIN` antes y después del índice; y
+5. el registro de uso de IA de esta parte: prompt, respuesta, revisión humana y
+   correcciones realizadas.
+
+### Consultas parametrizadas e inyección SQL
 
 Una inyección SQL ocurre cuando una aplicación concatena una entrada externa con
 el texto de una sentencia y permite que esa entrada cambie la operación que
@@ -399,7 +458,7 @@ autorización y exposición segura de herramientas MCP.
 uv run python -m pytest -q
 ```
 
-Resultado de la última verificación: **17 pruebas aprobadas**.
+Resultado de la última verificación: **20 pruebas aprobadas**.
 
 ## Estructura del proyecto
 

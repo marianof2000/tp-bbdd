@@ -27,6 +27,8 @@ from app.services.library_queries import (
     get_library_statistics,
     list_overdue_loans,
     search_books,
+    search_books_by_author,
+    search_members,
 )
 
 
@@ -175,6 +177,40 @@ def test_search_books_returns_catalog_details(db: Session) -> None:
             "editorial": "Editorial de prueba",
             "autores": ["Ada Lovelace"],
             "anio_publicacion": 2020,
+        }
+    ]
+
+
+def test_search_books_by_author_returns_catalog_details(db: Session) -> None:
+    """Precondiciones: existe un libro relacionado con una autora.
+    Postcondiciones: la búsqueda acepta nombre completo sin distinguir mayúsculas.
+    """
+    seed_library(db)
+
+    results = search_books_by_author(db, "ADA LOVELACE")
+
+    assert len(results) == 1
+    assert results[0]["titulo"] == "Libro de prueba"
+    assert results[0]["autores"] == ["Ada Lovelace"]
+
+
+def test_search_members_returns_only_members(db: Session) -> None:
+    """Precondiciones: existen un socio y una persona que sólo es bibliotecaria.
+    Postcondiciones: devuelve el socio por nombre completo con sus datos públicos.
+    """
+    member, _, _, _ = seed_library(db)
+
+    results = search_members(db, "ANA PAZ")
+
+    assert results == [
+        {
+            "id_socio": member.id_persona,
+            "nombre": "Ana",
+            "apellido": "Paz",
+            "documento": "1",
+            "email": None,
+            "fecha_alta": date.today().isoformat(),
+            "telefonos": [],
         }
     ]
 

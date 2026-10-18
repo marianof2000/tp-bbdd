@@ -1,11 +1,26 @@
 from datetime import date
 from typing import Any
 
-from sqlalchemy import and_, case, exists, func, select
+from sqlalchemy import and_, case, exists, func, or_, select
 from sqlalchemy.orm import Session, joinedload, selectinload
 
 from app.core.config import get_settings
-from app.models import Ejemplar, Libro, LibroAutor, Persona, Prestamo, Socio
+from app.models import Autor, Ejemplar, Libro, LibroAutor, Persona, Prestamo, Socio
+
+
+def _serialize_book(book: Libro) -> dict[str, Any]:
+    """Convierte un libro y sus relaciones cargadas en una respuesta serializable."""
+    return {
+        "id_libro": book.id_libro,
+        "titulo": book.titulo,
+        "isbn": book.isbn,
+        "editorial": book.editorial.nombre,
+        "autores": [
+            f"{authorship.autor.nombre} {authorship.autor.apellido}".strip()
+            for authorship in book.autores
+        ],
+        "anio_publicacion": book.anio_publicacion,
+    }
 
 
 def search_books(db: Session, title: str) -> list[dict[str, Any]]:
@@ -24,19 +39,74 @@ def search_books(db: Session, title: str) -> list[dict[str, Any]]:
         .order_by(Libro.titulo, Libro.id_libro)
     )
     books = db.scalars(statement).unique().all()
+    return [_serialize_book(book) for book in books]
+
+
+def search_books_by_author(db: Session, author: str) -> list[dict[str, Any]]:
+    """Busca libros por una parte literal del nombre o apellido de un autor."""
+    normalized_author = author.strip()
+    if not normalized_author:
+        raise ValueError("El autor de búsqueda no puede estar vacío.")
+
+    full_name = Autor.nombre + " " + Autor.apellido
+    statement = (
+        select(Libro)
+        .join(Libro.autores)
+        .join(LibroAutor.autor)
+        .options(
+            joinedload(Libro.editorial),
+            selectinload(Libro.autores).joinedload(LibroAutor.autor),
+        )
+        .where(
+            or_(
+                Autor.nombre.icontains(normalized_author, autoescape=True),
+                Autor.apellido.icontains(normalized_author, autoescape=True),
+                full_name.icontains(normalized_author, autoescape=True),
+            )
+        )
+        .order_by(Libro.titulo, Libro.id_libro)
+    )
+    books = db.scalars(statement).unique().all()
+    return [_serialize_book(book) for book in books]
+
+
+def search_members(db: Session, criterion: str) -> list[dict[str, Any]]:
+    """Busca socios por nombre, apellido, documento o email."""
+    normalized_criterion = criterion.strip()
+    if not normalized_criterion:
+        raise ValueError("El criterio de búsqueda no puede estar vacío.")
+
+    full_name = Persona.nombre + " " + Persona.apellido
+    statement = (
+        select(Socio)
+        .join(Socio.persona)
+        .options(joinedload(Socio.persona), selectinload(Socio.telefonos))
+        .where(
+            or_(
+                Persona.nombre.icontains(normalized_criterion, autoescape=True),
+                Persona.apellido.icontains(normalized_criterion, autoescape=True),
+                full_name.icontains(normalized_criterion, autoescape=True),
+                Persona.documento.icontains(normalized_criterion, autoescape=True),
+                Persona.email.icontains(normalized_criterion, autoescape=True),
+            )
+        )
+        .order_by(Persona.apellido, Persona.nombre, Socio.id_persona)
+    )
+    members = db.scalars(statement).unique().all()
     return [
         {
-            "id_libro": book.id_libro,
-            "titulo": book.titulo,
-            "isbn": book.isbn,
-            "editorial": book.editorial.nombre,
-            "autores": [
-                f"{authorship.autor.nombre} {authorship.autor.apellido}".strip()
-                for authorship in book.autores
+            "id_socio": member.id_persona,
+            "nombre": member.persona.nombre,
+            "apellido": member.persona.apellido,
+            "documento": member.persona.documento,
+            "email": member.persona.email,
+            "fecha_alta": member.fecha_alta.isoformat(),
+            "telefonos": [
+                {"numero": phone.numero, "tipo": phone.tipo}
+                for phone in member.telefonos
             ],
-            "anio_publicacion": book.anio_publicacion,
         }
-        for book in books
+        for member in members
     ]
 
 

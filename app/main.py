@@ -10,7 +10,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.core.auth import PermissionDenied, current_user
 from app.core.config import get_settings
 from app.core.middleware import AuthenticationMiddleware
-from app.routes import auth, basic, catalog, loans
+from app.routes import auth, basic, catalog, loans, reports
 from app.services.crud import PersistenceError
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -114,4 +114,5 @@ def favicon() -> RedirectResponse:
 app.include_router(auth.router)
 app.include_router(loans.router)
 app.include_router(catalog.router)
+app.include_router(reports.router)
 app.include_router(basic.router)

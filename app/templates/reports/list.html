@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Consultas · Biblioteca{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">Consultas desde Python</p>
+    <h1>20 preguntas de negocio</h1>
+    <p class="muted">Resultados obtenidos con expresiones parametrizadas de SQLAlchemy sobre la base de la biblioteca.</p>
+  </div>
+</div>
+
+<div class="report-grid">
+  {% for report in reports %}
+  <section class="panel report-card">
+    <p class="eyebrow">Consulta {{ report.number }}</p>
+    <h2>{{ report.question }}</h2>
+    {% if report.rows %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr>{% for key, label in report.columns %}<th>{{ label }}</th>{% endfor %}</tr></thead>
+        <tbody>
+          {% for row in report.rows %}
+          <tr>{% for key, label in report.columns %}<td>{{ row[key] if row[key] is not none else "—" }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty">No se encontraron registros.</div>
+    {% endif %}
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

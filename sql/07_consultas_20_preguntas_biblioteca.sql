@@ -29,9 +29,13 @@ ORDER BY apellido, nombre;
 
 -- 5. ¿Cuántos teléfonos se registraron y cuántos socios tienen al menos uno?
 -- Esperado: 55 teléfonos para 45 socios.
+-- Informe multitabla: persona + socio + telefono_socio.
 SELECT
-    (SELECT COUNT(*) FROM telefono_socio) AS total_telefonos,
-    (SELECT COUNT(DISTINCT id_socio) FROM telefono_socio) AS socios_con_telefono;
+    COUNT(DISTINCT ts.id_telefono_socio) AS total_telefonos,
+    COUNT(DISTINCT p.id_persona) AS socios_con_telefono
+FROM persona AS p
+JOIN socio AS s ON s.id_persona = p.id_persona
+JOIN telefono_socio AS ts ON ts.id_socio = s.id_persona;
 
 -- 6. ¿Cuántos socios tienen uno o dos teléfonos?
 -- Esperado: 35 socios con 1 teléfono y 10 socios con 2 teléfonos.
@@ -51,10 +55,15 @@ FROM autor;
 
 -- 8. ¿Cuántos autores tienen al menos un libro asociado y cuántos no tienen ninguno?
 -- Esperado: 50 con libro y 60 sin libro.
+-- Informe multitabla: autor + libro_autor + libro.
 SELECT
-    (SELECT COUNT(DISTINCT id_autor) FROM libro_autor) AS autores_con_libro,
-    (SELECT COUNT(*) FROM autor)
-      - (SELECT COUNT(DISTINCT id_autor) FROM libro_autor) AS autores_sin_libro;
+    COUNT(DISTINCT CASE WHEN l.id_libro IS NOT NULL THEN a.id_autor END)
+        AS autores_con_libro,
+    COUNT(DISTINCT CASE WHEN l.id_libro IS NULL THEN a.id_autor END)
+        AS autores_sin_libro
+FROM autor AS a
+LEFT JOIN libro_autor AS la ON la.id_autor = a.id_autor
+LEFT JOIN libro AS l ON l.id_libro = la.id_libro;
 
 -- 9. ¿Cuántas editoriales están registradas?
 -- Esperado: 30 si la tabla estaba vacía antes de la carga.
@@ -92,11 +101,14 @@ ORDER BY anio_publicacion;
 
 -- 14. ¿Qué editoriales tienen la mayor cantidad de libros en el set?
 -- Esperado: Alfaguara y HarperCollins, con 5 libros cada una.
-SELECT e.nombre AS editorial, COUNT(l.id_libro) AS cantidad_libros
+-- Informe multitabla: editorial + libro + libro_autor.
+-- DISTINCT evita repetir libros que tengan más de un autor.
+SELECT e.nombre AS editorial, COUNT(DISTINCT l.id_libro) AS cantidad_libros
 FROM editorial AS e
 JOIN libro AS l ON l.id_editorial = e.id_editorial
+LEFT JOIN libro_autor AS la ON la.id_libro = l.id_libro
 GROUP BY e.id_editorial, e.nombre
-HAVING COUNT(l.id_libro) = (
+HAVING COUNT(DISTINCT l.id_libro) = (
     SELECT MAX(cantidad_libros)
     FROM (
         SELECT COUNT(*) AS cantidad_libros
@@ -145,19 +157,25 @@ ORDER BY estado;
 -- 19. ¿Qué libros tienen ejemplares en reparación?
 -- Esperado: El último tren de la memoria; Pequeño atlas de la noche;
 --           Los nombres del bosque profundo; El mapa de los pájaros azules.
-SELECT l.titulo, COUNT(e.id_ejemplar) AS ejemplares_en_reparacion
-FROM libro AS l
+-- Informe multitabla: editorial + libro + ejemplar.
+SELECT ed.nombre AS editorial, l.titulo,
+       COUNT(e.id_ejemplar) AS ejemplares_en_reparacion
+FROM editorial AS ed
+JOIN libro AS l ON l.id_editorial = ed.id_editorial
 JOIN ejemplar AS e ON e.id_libro = l.id_libro
 WHERE e.estado = 'en_reparacion'
   AND e.codigo_inventario BETWEEN 'INV-0001' AND 'INV-0101'
-GROUP BY l.id_libro, l.titulo
+GROUP BY ed.id_editorial, ed.nombre, l.id_libro, l.titulo
 ORDER BY l.titulo;
 
 -- 20. ¿Qué libros tienen menos de tres ejemplares para evaluar una ampliación del inventario?
 -- Esperado: 33 libros. La consulta lista sus títulos y cantidades actuales.
-SELECT l.titulo, COUNT(e.id_ejemplar) AS cantidad_ejemplares
-FROM libro AS l
+-- Informe multitabla: editorial + libro + ejemplar.
+SELECT ed.nombre AS editorial, l.titulo,
+       COUNT(e.id_ejemplar) AS cantidad_ejemplares
+FROM editorial AS ed
+JOIN libro AS l ON l.id_editorial = ed.id_editorial
 LEFT JOIN ejemplar AS e ON e.id_libro = l.id_libro
-GROUP BY l.id_libro, l.titulo
+GROUP BY ed.id_editorial, ed.nombre, l.id_libro, l.titulo
 HAVING COUNT(e.id_ejemplar) < 3
 ORDER BY cantidad_ejemplares, l.titulo;

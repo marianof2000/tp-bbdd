@@ -62,6 +62,9 @@ th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;background:#ed
 .clean-list li{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:.75rem}
 .inline-form{max-width:680px;display:flex;align-items:end;gap:1rem;flex-wrap:wrap}
 .inline-form label{flex:1;min-width:180px}
+.report-grid{display:grid;gap:1.25rem}
+.report-card h2{font-size:1.35rem;margin:.35rem 0 1rem}
+.report-card .table-wrap{box-shadow:none}
 @media(max-width:650px){header{display:block}
 nav{margin-top:1rem}
 .page-head{align-items:start}

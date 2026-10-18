@@ -1,0 +1,5 @@
+[mcp_servers.biblioteca]
+command = "uv"
+args = ["run", "python", "-m", "app.mcp_server"]
+cwd = "/home/marianof/Documents/Educacion/02-Diplomaturas_y_Maestrías/2026 09 Diplomatura Superior y de Vinculación en Fundamentos de Programación Asistida por Inteligencia Artificial - UNAJ/03-BBDD/TPI-python"
+startup_timeout_sec = 20

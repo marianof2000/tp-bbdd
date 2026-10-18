@@ -5,7 +5,7 @@ from app.mcp_server import mcp
 
 def test_mcp_exposes_only_read_only_tools() -> None:
     """Precondiciones: el servidor MCP puede construirse sin abrir la base.
-    Postcondiciones: publica sólo las cuatro herramientas de consulta declaradas.
+    Postcondiciones: publica sólo las seis herramientas de consulta declaradas.
     """
 
     async def list_tools():
@@ -15,6 +15,8 @@ def test_mcp_exposes_only_read_only_tools() -> None:
 
     assert {tool.name for tool in tools} == {
         "buscar_libros",
+        "buscar_libros_por_autor",
+        "buscar_socios",
         "consultar_disponibilidad",
         "listar_prestamos_vencidos",
         "obtener_estadisticas_biblioteca",

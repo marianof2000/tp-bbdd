@@ -11,6 +11,8 @@ from app.services.library_queries import (
     get_library_statistics,
     list_overdue_loans,
     search_books,
+    search_books_by_author,
+    search_members,
 )
 
 DATABASE_ERROR = "No se pudo consultar la biblioteca en este momento."
@@ -51,6 +53,28 @@ def buscar_libros(titulo: str) -> dict[str, Any]:
     def query(db: Session) -> dict[str, Any]:
         books = search_books(db, titulo)
         return {"cantidad": len(books), "libros": books}
+
+    return _read(query)
+
+
+@mcp.tool(annotations=READ_ONLY_ANNOTATIONS)
+def buscar_libros_por_autor(autor: str) -> dict[str, Any]:
+    """Busca libros por coincidencias en el nombre o apellido de sus autores."""
+
+    def query(db: Session) -> dict[str, Any]:
+        books = search_books_by_author(db, autor)
+        return {"cantidad": len(books), "libros": books}
+
+    return _read(query)
+
+
+@mcp.tool(annotations=READ_ONLY_ANNOTATIONS)
+def buscar_socios(criterio: str) -> dict[str, Any]:
+    """Busca socios por nombre, apellido, documento o email."""
+
+    def query(db: Session) -> dict[str, Any]:
+        members = search_members(db, criterio)
+        return {"cantidad": len(members), "socios": members}
 
     return _read(query)
 

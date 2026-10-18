@@ -14,3 +14,4 @@ wheels/
 .venv/
 .idea/
 .vscode/
+.codex/config.toml

@@ -144,7 +144,7 @@ La aplicación implementa las veinte preguntas del archivo
 `app/services/report_queries.py`. Los resultados se pueden consultar desde
 `/consultas`.
 
-Los cinco informes que combinan tres tablas son:
+Entre las veinte consultas implementadas, las cinco que combinan tres tablas son:
 
 | N.º | Pregunta resumida | Tablas combinadas |
 |---:|---|---|
@@ -159,6 +159,13 @@ de un libro con varios autores, aunque no es indispensable para responder qué
 editorial tiene más libros. Si se exige que las tres tablas sean necesarias para
 la pregunta de negocio, este informe debe reemplazarse por otro que cumpla ese
 criterio de forma sustantiva.
+
+Estas cinco consultas no deben confundirse con los cinco informes de gestión
+adicionales propuestos en la sección 6.2 de `docs/content.md`: catálogo con
+autores y editoriales, ejemplares disponibles, préstamos pendientes por socio,
+préstamos registrados por bibliotecario y libros más prestados. Esos informes
+están definidos conceptualmente en la memoria académica, pero todavía no cuentan
+con scripts, resultados ni evidencias de ejecución incorporados a la entrega.
 
 Las consultas 6, 13, 14, 17, 18, 19 y 20 emplean agregación con `GROUP BY`.
 Las consultas 14 y 20 agregan `HAVING`. Las consultas 6, 10, 14 y 17 contienen
@@ -192,9 +199,10 @@ de la aplicación ni de las pruebas automatizadas.
 
 ### Estado de la documentación de la Parte 6
 
-La implementación SQL y Python está disponible, pero `docs/content.md` y el PDF
-local todavía terminan en la Actividad 5. La entrega documental de la Parte 6
-debe incorporar:
+La implementación SQL y Python está disponible. `docs/content.md` y el PDF local
+ya contienen las Partes 6, 7 y 8, pero la Parte 6 conserva apartados y resultados
+marcados como pendientes. Para completar la entrega documental se debe
+incorporar:
 
 1. el SQL, resultado esperado, resultado obtenido y comprobación de cada
    consulta;

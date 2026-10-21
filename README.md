@@ -79,6 +79,10 @@ desarrollo.
 | `AUTH_USER_USERNAME` | `user` | Nombre de la cuenta de consulta |
 | `AUTH_USER_PASSWORD_HASH` | hash incluido | Hash scrypt de la clave de consulta |
 
+`AVAILABLE_COPY_STATE` y `REPAIR_COPY_STATE` deben conservar los valores
+`operativo` y `en_reparacion`, respectivamente, porque tienen que coincidir con
+los valores admitidos por el `ENUM` `ejemplar.estado` del esquema MySQL.
+
 La URL de conexión se construye internamente con el driver `mysql+pymysql` y
 escapa el usuario y la contraseña. La aplicación **no crea, altera ni elimina
 tablas al arrancar** y no incluye migraciones automáticas.
